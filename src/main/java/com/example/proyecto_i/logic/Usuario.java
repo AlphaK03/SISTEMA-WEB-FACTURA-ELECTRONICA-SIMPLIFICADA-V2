@@ -1,4 +1,4 @@
-package com.example.proyecto_i.data;
+package com.example.proyecto_i.logic;
 
 public class Usuario {
     private String identification;

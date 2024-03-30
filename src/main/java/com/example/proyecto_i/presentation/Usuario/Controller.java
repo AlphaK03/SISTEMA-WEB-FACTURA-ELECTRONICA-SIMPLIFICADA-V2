@@ -1,6 +1,6 @@
 package com.example.proyecto_i.presentation.Usuario;
 import com.example.proyecto_i.logic.Service;
-import com.example.proyecto_i.data.Usuario;
+import com.example.proyecto_i.logic.Usuario;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
