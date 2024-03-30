@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.Objects;
 
 @Entity
-public class Clientes {
+public class Cliente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "identificacion")
@@ -62,7 +62,7 @@ public class Clientes {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Clientes clientes = (Clientes) o;
+        Cliente clientes = (Cliente) o;
         return Objects.equals(identificacion, clientes.identificacion) && Objects.equals(nombre, clientes.nombre) && Objects.equals(telefono, clientes.telefono) && Objects.equals(correo, clientes.correo);
     }
 

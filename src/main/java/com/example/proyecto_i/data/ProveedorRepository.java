@@ -4,8 +4,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.repository.CrudRepository;
 
-@Component
-public interface ProveedorRepository extends CrudRepository<Proveedor, String>{
-    //En este caso el crud repository encuentra por id, no es necesario la función
+@Repository
+public interface ProveedorRepository extends CrudRepository <Proveedor, String>{
+
     Proveedor findByIdentification(String identification);
 }

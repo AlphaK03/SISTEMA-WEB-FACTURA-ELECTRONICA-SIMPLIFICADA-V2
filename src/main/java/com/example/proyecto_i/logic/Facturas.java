@@ -18,7 +18,7 @@ public class Facturas {
     private Proveedor proveedorByProveedor;
     @ManyToOne
     @JoinColumn(name = "cliente", referencedColumnName = "identificacion", nullable = false)
-    private Clientes clientesByCliente;
+    private Cliente clientesByCliente;
 
     public String getNumero() {
         return numero;
@@ -57,11 +57,11 @@ public class Facturas {
         this.proveedorByProveedor = proveedorByProveedor;
     }
 
-    public Clientes getClientesByCliente() {
+    public Cliente getClientesByCliente() {
         return clientesByCliente;
     }
 
-    public void setClientesByCliente(Clientes clientesByCliente) {
+    public void setClientesByCliente(Cliente clientesByCliente) {
         this.clientesByCliente = clientesByCliente;
     }
 }

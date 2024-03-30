@@ -24,7 +24,7 @@ public class Proveedor {
     @Column(name = "contraseña")
     private String contraseña;
     @OneToMany(mappedBy = "proveedorByProveedor")
-    private Collection<Clientes> clientesByIdentificacion;
+    private Collection<Cliente> clientesByIdentificacion;
     @OneToMany(mappedBy = "proveedorByProveedor")
     private Collection<Facturas> facturasByIdentificacion;
     @OneToMany(mappedBy = "proveedorByProveedor")
@@ -83,11 +83,11 @@ public class Proveedor {
         return Objects.hash(identificacion, nombre, telefono, correo, contraseña);
     }
 
-    public Collection<Clientes> getClientesByIdentificacion() {
+    public Collection<Cliente> getClientesByIdentificacion() {
         return clientesByIdentificacion;
     }
 
-    public void setClientesByIdentificacion(Collection<Clientes> clientesByIdentificacion) {
+    public void setClientesByIdentificacion(Collection<Cliente> clientesByIdentificacion) {
         this.clientesByIdentificacion = clientesByIdentificacion;
     }
 
