@@ -20,8 +20,8 @@ public class Administrador {
     @Column(name = "correo")
     private String correo;
     @Basic
-    @Column(name = "contraseña")
-    private String contraseña;
+    @Column(name = "contrasena")
+    private String contrasena;
 
     public String getIdentificacion() {
         return identificacion;
@@ -55,12 +55,12 @@ public class Administrador {
         this.correo = correo;
     }
 
-    public String getContraseña() {
-        return contraseña;
+    public String getContrasena() {
+        return contrasena;
     }
 
-    public void setContraseña(String contraseña) {
-        this.contraseña = contraseña;
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
     }
 
     @Override
@@ -68,11 +68,11 @@ public class Administrador {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Administrador that = (Administrador) o;
-        return Objects.equals(identificacion, that.identificacion) && Objects.equals(nombre, that.nombre) && Objects.equals(telefono, that.telefono) && Objects.equals(correo, that.correo) && Objects.equals(contraseña, that.contraseña);
+        return Objects.equals(identificacion, that.identificacion) && Objects.equals(nombre, that.nombre) && Objects.equals(telefono, that.telefono) && Objects.equals(correo, that.correo) && Objects.equals(contrasena, that.contrasena);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(identificacion, nombre, telefono, correo, contraseña);
+        return Objects.hash(identificacion, nombre, telefono, correo, contrasena);
     }
 }

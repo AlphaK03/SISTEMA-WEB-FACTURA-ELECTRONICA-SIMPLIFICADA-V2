@@ -13,9 +13,8 @@ public class Controller {
 
     @PostMapping("/presentation/login/login")
     public String login(Usuario usuario, HttpSession httpSession){
-        try{
-            /*Falta verificar la contraseña*/
-            Usuario userDB = service.usuarioRead(usuario.getIdentification());
+       /* try{
+            Usuario userDB = service.p(usuario.getIdentification());
             httpSession.setAttribute("Usuario",userDB);
             httpSession.setAttribute("proveedor",service.proveedorRead(userDB.getIdentification()));
             switch (userDB.getRol()){
@@ -25,6 +24,7 @@ public class Controller {
         }catch(Exception ex){
             ex.getMessage();
         }
+            */
         return null;
     }
     @GetMapping("/presentation/login/logout")

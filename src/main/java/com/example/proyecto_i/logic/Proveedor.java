@@ -21,8 +21,8 @@ public class Proveedor {
     @Column(name = "correo")
     private String correo;
     @Basic
-    @Column(name = "contraseña")
-    private String contraseña;
+    @Column(name = "contrasena")
+    private String contrasena;
     @OneToMany(mappedBy = "proveedorByProveedor")
     private Collection<Cliente> clientesByIdentificacion;
     @OneToMany(mappedBy = "proveedorByProveedor")
@@ -62,12 +62,12 @@ public class Proveedor {
         this.correo = correo;
     }
 
-    public String getContraseña() {
-        return contraseña;
+    public String getContrasena() {
+        return contrasena;
     }
 
-    public void setContraseña(String contraseña) {
-        this.contraseña = contraseña;
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
     }
 
     @Override
@@ -75,12 +75,12 @@ public class Proveedor {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Proveedor proveedor = (Proveedor) o;
-        return Objects.equals(identificacion, proveedor.identificacion) && Objects.equals(nombre, proveedor.nombre) && Objects.equals(telefono, proveedor.telefono) && Objects.equals(correo, proveedor.correo) && Objects.equals(contraseña, proveedor.contraseña);
+        return Objects.equals(identificacion, proveedor.identificacion) && Objects.equals(nombre, proveedor.nombre) && Objects.equals(telefono, proveedor.telefono) && Objects.equals(correo, proveedor.correo) && Objects.equals(contrasena, proveedor.contrasena);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(identificacion, nombre, telefono, correo, contraseña);
+        return Objects.hash(identificacion, nombre, telefono, correo, contrasena);
     }
 
     public Collection<Cliente> getClientesByIdentificacion() {

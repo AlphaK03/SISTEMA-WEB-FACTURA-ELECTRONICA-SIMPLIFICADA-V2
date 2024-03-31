@@ -7,5 +7,4 @@ import org.springframework.data.repository.CrudRepository;
 @Repository
 public interface ProveedorRepository extends CrudRepository <Proveedor, String>{
 
-    Proveedor findByIdentification(String identification);
 }
