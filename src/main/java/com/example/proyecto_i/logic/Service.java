@@ -171,6 +171,7 @@ public class Service {
     }
 
 
-
+    public void registrar(Administrador administrador) {
+    }
 }
 

@@ -21,6 +21,10 @@ public class Controller {
     @ModelAttribute("clienteEdit") public Cliente clienteEdit(){return new Cliente();}
     @ModelAttribute("proveedor") public Proveedor proveedor (){return new Proveedor(); }
 
+    @GetMapping("/")
+    public String showHeader() {
+        return "fragments/header";
+    }
 
     @PostMapping("/presentation/clientes/search")
     public String search(
@@ -32,5 +36,5 @@ public class Controller {
         return "presentation/clientes/View";
     }
 
-
 }
+

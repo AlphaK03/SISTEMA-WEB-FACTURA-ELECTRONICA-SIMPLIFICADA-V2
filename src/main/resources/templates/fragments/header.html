@@ -1,15 +1,14 @@
-<header th:fragment = "header" class = "header">
-    <div class = "logo"></div>
+<header th:fragment="header" class="header">
+    <div class="logo"></div>
     <div>
-        <ul class = "Menu">
-            <li><a href = "/presentation/acercade/show"> Acerca de</a></li>
-            <th:block th: if ="${session.usuario != null}">
-                <th: block th:if="${session.usuario.getRol().equals('PRO')}"></th:>
-                <th:block th:if="${session.usuario.getRol().equals('ADM')}"></th:block>
-                <li><!-- Agregar cuales son los items que se muestran siempre en el menu segun el rol--></li>
+        <ul class="Menu">
+            <li><a href="/presentation/acercade/show">Acerca de</a></li>
+            <th:block th:if="${session.usuario != null}">
+                <li th:if="${session.usuario.getRol().equals('PRO')}"><!-- Agrega los ítems específicos para el rol PRO --></li>
+                <li th:if="${session.usuario.getRol().equals('ADM')}"><!-- Agrega los ítems específicos para el rol ADM --></li>
             </th:block>
-            <th:block th:unless = "${session.usuario != null}">
-                <li><a href = "/presentation/login/show">Login</a></li>
+            <th:block th:unless="${session.usuario != null}">
+                <li><a href="/presentation/login/show">Login</a></li>
             </th:block>
         </ul>
     </div>
