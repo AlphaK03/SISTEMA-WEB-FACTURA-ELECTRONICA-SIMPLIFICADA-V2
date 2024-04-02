@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.util.Objects;
 
 @Entity
-public class Productos {
+public class Producto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "codigo")
@@ -48,7 +48,7 @@ public class Productos {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Productos productos = (Productos) o;
+        Producto productos = (Producto) o;
         return Objects.equals(codigo, productos.codigo) && Objects.equals(nombre, productos.nombre) && Objects.equals(precio, productos.precio);
     }
 

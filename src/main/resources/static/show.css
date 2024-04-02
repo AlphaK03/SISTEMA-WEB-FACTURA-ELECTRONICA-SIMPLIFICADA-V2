@@ -1,0 +1,66 @@
+/* Estilos para la página de inicio de sesión */
+body {
+    font-family: Arial, sans-serif; /* Fuente del texto */
+    background-color: #f0f0f0; /* Color de fondo */
+    margin: 0; /* Elimina el margen exterior */
+    padding: 0; /* Elimina el relleno exterior */
+    display: flex; /* Utiliza flexbox para alinear el contenido */
+    flex-direction: column; /* Apila los elementos verticalmente */
+    align-items: center; /* Centra horizontalmente el contenido */
+    min-height: 100vh; /* Establece la altura mínima del cuerpo al 100% del viewport */
+}
+
+.container {
+    background-color: #fff; /* Color de fondo del contenedor */
+    padding: 20px; /* Añade espacio alrededor del contenido */
+    border-radius: 5px; /* Añade bordes redondeados */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Añade sombra al contenedor */
+    margin-top: 20px; /* Añade margen superior */
+}
+
+h2 {
+    text-align: center; /* Centra el título horizontalmente */
+}
+
+form {
+    width: 300px; /* Ancho del formulario */
+}
+
+label {
+    display: block; /* Muestra las etiquetas en una línea separada */
+    margin-bottom: -10px; /* Añade espacio debajo de las etiquetas */
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 91%; /* Ocupa todo el ancho del contenedor */
+    padding: 10px; /* Añade espacio interno */
+    margin-bottom: 10px; /* Añade espacio debajo de los campos de entrada */
+    border: 1px solid #ccc; /* Añade borde */
+    border-radius: 5px; /* Añade bordes redondeados */
+}
+
+input[type="submit"] {
+    width: 100%; /* Ocupa todo el ancho del contenedor */
+    padding: 10px; /* Añade espacio interno */
+    background-color: #007bff; /* Color de fondo del botón */
+    color: #fff; /* Color del texto del botón */
+    border: none; /* Elimina el borde */
+    border-radius: 5px; /* Añade bordes redondeados */
+    cursor: pointer; /* Cambia el cursor al pasar por encima */
+    transition: background-color 0.3s; /* Agrega transición suave al color de fondo */
+}
+
+input[type="submit"]:hover {
+    background-color: #0056b3; /* Cambia el color de fondo al pasar el mouse */
+}
+
+a {
+    text-decoration: none; /* Elimina el subrayado de los enlaces */
+    color: #007bff; /* Color del texto del enlace */
+}
+
+a:hover {
+    text-decoration: underline; /* Subraya el enlace al pasar el mouse */
+}

@@ -94,15 +94,15 @@ public class Service {
     }
 
     //------------------PRODUCTOS----------------
-    public void productosCreate (Productos product) throws  Exception{
+    public void productosCreate (Producto product) throws  Exception{
         productosRepository.save(product);
     }
 
-    public List<Productos> productosSearchAll(String id_proveedor) throws Exception{
+    public List<Producto> productosSearchAll(String id_proveedor) throws Exception{
         //Hay que filtrar cada uno de los productos según el proveedor
-        return (List<Productos>) productosRepository.findAll();
+        return (List<Producto>) productosRepository.findAll();
     }
-    public Optional<Productos> productosSearch(Proveedor prov, String cod)  throws Exception{
+    public Optional<Producto> productosSearch(Proveedor prov, String cod)  throws Exception{
         /*Flitrar los productos según el proveedor*/
         return productosRepository.findById(cod);
     }
@@ -142,15 +142,15 @@ public class Service {
     }
 
     //------------------FACTURAS----------------
-    public void facturasCreate(Facturas factura) throws Exception {
+    public void facturasCreate(Factura factura) throws Exception {
         facturasRepository.save(factura);
     }
 
-    public List<Facturas> facturasSearchAll() throws Exception {
-        return (List<Facturas>) facturasRepository.findAll();
+    public List<Factura> facturasSearchAll() throws Exception {
+        return (List<Factura>) facturasRepository.findAll();
     }
 
-    public Facturas facturasSearch(String id) throws Exception {
+    public Factura facturasSearch(String id) throws Exception {
         return facturasRepository.findById(id).orElse(null);
     }
 
@@ -158,13 +158,13 @@ public class Service {
         facturasRepository.deleteById(id);
     }
 
-    public Facturas facturasUpdate(String id, Facturas facturaActualizada) {
-        Optional<Facturas> facturaOptional = facturasRepository.findById(id);
+    public Factura facturasUpdate(String id, Factura facturaActualizada) {
+        Optional<Factura> facturaOptional = facturasRepository.findById(id);
 
         if (facturaOptional.isPresent()) {
-            Facturas factura = facturaOptional.get();
+            Factura factura = facturaOptional.get();
             factura.setFecha(facturaActualizada.getFecha());
-            return (Facturas) facturasRepository.save(factura);
+            return (Factura) facturasRepository.save(factura);
         } else {
             throw new RuntimeException("Factura no encontrada con ID: " + id);
         }
@@ -172,6 +172,7 @@ public class Service {
 
 
     public void registrar(Administrador administrador) {
+        administradorRepository.save(administrador);
     }
 }
 

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Producto</title>
+</head>
+<body>
+<h2>Agregar Producto</h2>
+<form action="/agregarProducto" method="post">
+    <label for="nombre">Nombre del Producto:</label><br>
+    <input type="text" id="nombre" name="nombre" required><br>
+
+    <label for="precio">Precio:</label><br>
+    <input type="text" id="precio" name="precio" required><br>
+
+    <label for="proveedor">Proveedor:</label><br>
+    <select id="proveedor" name="proveedor">
+        <option th:each="proveedor : ${proveedores}" th:value="${proveedor.id}" th:text="${proveedor.nombre}"></option>
+    </select><br>
+
+    <button type="submit">Agregar Producto</button>
+</form>
+</body>
+</html>

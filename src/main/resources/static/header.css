@@ -1,0 +1,49 @@
+/* Estilos para el header */
+.header {
+    display: flex; /* Utilizamos flexbox para alinear los elementos */
+    justify-content: space-between; /* Distribuye los elementos horizontalmente */
+    align-items: center; /* Centra verticalmente los elementos */
+    padding: 10px; /* Añade espacio alrededor del header */
+    background-color: #333; /* Color de fondo */
+    color: #fff; /* Color del texto */
+}
+
+
+
+/* Estilos para el logo */
+.logo {
+    width: 1000px; /* Ancho del logo */
+    height: auto; /* Altura ajustada automáticamente */
+}
+
+/* Estilos para el menú */
+.Menu {
+    list-style-type: none; /* Elimina los estilos de lista predeterminados */
+    margin: 0; /* Elimina el margen exterior */
+    padding: 0; /* Elimina el relleno interior */
+    display: flex; /* Utilizamos flexbox para alinear los elementos */
+}
+
+/* Estilos para los elementos del menú */
+.Menu li {
+    margin-right: 20px; /* Añade espacio entre los elementos del menú */
+}
+
+/* Estilos para los enlaces del menú */
+.Menu li a {
+    text-decoration: none; /* Elimina el subrayado de los enlaces */
+    color: #fff; /* Color del texto */
+}
+
+/* Estilos para los enlaces del menú al pasar el mouse sobre ellos */
+.Menu li a:hover {
+    text-decoration: underline; /* Subraya el enlace al pasar el mouse sobre él */
+}
+
+#titulo-header {
+    text-align: center; /* Centra horizontalmente el texto */
+    font-size: 30px; /* Tamaño de fuente */
+    font-weight: bold; /* Texto en negrita */
+    color: #ffffff; /* Color del texto */
+    font-family: Algerian, sans-serif;
+}

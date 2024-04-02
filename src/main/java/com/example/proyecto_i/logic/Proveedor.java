@@ -26,9 +26,9 @@ public class Proveedor {
     @OneToMany(mappedBy = "proveedorByProveedor")
     private Collection<Cliente> clientesByIdentificacion;
     @OneToMany(mappedBy = "proveedorByProveedor")
-    private Collection<Facturas> facturasByIdentificacion;
+    private Collection<Factura> facturasByIdentificacion;
     @OneToMany(mappedBy = "proveedorByProveedor")
-    private Collection<Productos> productosByIdentificacion;
+    private Collection<Producto> productosByIdentificacion;
 
     public String getIdentificacion() {
         return identificacion;
@@ -91,19 +91,19 @@ public class Proveedor {
         this.clientesByIdentificacion = clientesByIdentificacion;
     }
 
-    public Collection<Facturas> getFacturasByIdentificacion() {
+    public Collection<Factura> getFacturasByIdentificacion() {
         return facturasByIdentificacion;
     }
 
-    public void setFacturasByIdentificacion(Collection<Facturas> facturasByIdentificacion) {
+    public void setFacturasByIdentificacion(Collection<Factura> facturasByIdentificacion) {
         this.facturasByIdentificacion = facturasByIdentificacion;
     }
 
-    public Collection<Productos> getProductosByIdentificacion() {
+    public Collection<Producto> getProductosByIdentificacion() {
         return productosByIdentificacion;
     }
 
-    public void setProductosByIdentificacion(Collection<Productos> productosByIdentificacion) {
+    public void setProductosByIdentificacion(Collection<Producto> productosByIdentificacion) {
         this.productosByIdentificacion = productosByIdentificacion;
     }
 }

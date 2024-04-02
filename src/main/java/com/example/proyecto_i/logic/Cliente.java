@@ -24,7 +24,7 @@ public class Cliente {
     @JoinColumn(name = "proveedor", referencedColumnName = "identificacion", nullable = false)
     private Proveedor proveedorByProveedor;
     @OneToMany(mappedBy = "clientesByCliente")
-    private Collection<Facturas> facturasByIdentificacion;
+    private Collection<Factura> facturasByIdentificacion;
 
     public String getIdentificacion() {
         return identificacion;
@@ -79,11 +79,11 @@ public class Cliente {
         this.proveedorByProveedor = proveedorByProveedor;
     }
 
-    public Collection<Facturas> getFacturasByIdentificacion() {
+    public Collection<Factura> getFacturasByIdentificacion() {
         return facturasByIdentificacion;
     }
 
-    public void setFacturasByIdentificacion(Collection<Facturas> facturasByIdentificacion) {
+    public void setFacturasByIdentificacion(Collection<Factura> facturasByIdentificacion) {
         this.facturasByIdentificacion = facturasByIdentificacion;
     }
 }

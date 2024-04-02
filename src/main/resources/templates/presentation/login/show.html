@@ -3,8 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Iniciar sesión</title>
+    <!-- Enlaza los estilos CSS -->
+    <link rel="stylesheet" th:href="@{/header.css}">
+
+    <link rel="stylesheet" th:href="@{/show.css}">
 </head>
 <body>
+<!-- Incluye el fragmento del encabezado -->
+<div th:replace="fragments/header :: header"></div>
+
 <h2>Iniciar sesión</h2>
 <form action="/login" method="post">
     <label for="username">Usuario:</label><br>
@@ -16,3 +23,4 @@
 <p>¿No tienes una cuenta? <a href="/registro">Regístrese aquí</a></p>
 </body>
 </html>
+
