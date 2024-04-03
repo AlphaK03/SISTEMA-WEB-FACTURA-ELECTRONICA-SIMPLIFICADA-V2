@@ -23,12 +23,20 @@ public class Proveedor {
     @Basic
     @Column(name = "contrasena")
     private String contrasena;
+
+    @Basic
+    @Column(name = "rol")
+    private String rol;
     @OneToMany(mappedBy = "proveedorByProveedor")
     private Collection<Cliente> clientesByIdentificacion;
     @OneToMany(mappedBy = "proveedorByProveedor")
     private Collection<Factura> facturasByIdentificacion;
     @OneToMany(mappedBy = "proveedorByProveedor")
     private Collection<Producto> productosByIdentificacion;
+
+    public String getRol() {
+        return rol;
+    }
 
     public String getIdentificacion() {
         return identificacion;

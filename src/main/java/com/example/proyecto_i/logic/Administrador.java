@@ -22,6 +22,14 @@ public class Administrador {
     @Column(name = "contrasena")
     private String contrasena;
 
+    @Basic
+    @Column(name = "rol")
+    private String rol;
+
+    public String getRol() {
+        return rol;
+    }
+
     public String getIdentificacion() {
         return identificacion;
     }

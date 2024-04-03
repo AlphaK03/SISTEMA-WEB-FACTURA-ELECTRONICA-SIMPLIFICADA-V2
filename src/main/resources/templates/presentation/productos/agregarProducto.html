@@ -1,10 +1,15 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Agregar Producto</title>
+    <link rel="stylesheet" th:href="@{/header.css}">
+    <link rel="stylesheet" th:href="@{/show.css}">
 </head>
 <body>
+
+<div th:replace="fragments/header :: header"></div>
+
 <h2>Agregar Producto</h2>
 <form action="/agregarProducto" method="post">
     <label for="nombre">Nombre del Producto:</label><br>

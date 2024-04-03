@@ -1,10 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Clientes</title>
+    <link rel="stylesheet" th:href="@{/search.css}">
 </head>
 <body>
-
+<div class="container">
+    <div class="box">
+        <h2>Clientes</h2>
+        <div class="search">
+            <input type="text" placeholder="Buscar cliente...">
+            <button type="button">Buscar</button>
+        </div>
+        <div class="client-list">
+            <!-- Aquí se mostrarán los clientes encontrados -->
+        </div>
+    </div>
+    <div class="box">
+        <h2>Editar</h2>
+        <div class="edit-form">
+            <input type="text" placeholder="Identificación">
+            <input type="text" placeholder="Nombre">
+            <input type="text" placeholder="Correo">
+            <input type="text" placeholder="Teléfono">
+            <button type="button">Guardar</button>
+        </div>
+    </div>
+</div>
 </body>
 </html>

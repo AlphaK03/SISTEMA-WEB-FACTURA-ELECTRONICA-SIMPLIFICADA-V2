@@ -1,25 +1,23 @@
 package com.example.proyecto_i.logic;
 
 public class Usuario {
-    private String identification;
+    private String identificacion;
     private String password;
     private String rol;
 
-    public Usuario() {
-    }
 
-    public Usuario(String identification, String password, String rol) {
-        this.identification = identification;
+    public Usuario(String identificacion, String password, String rol) {
+        this.identificacion = identificacion;
         this.password = password;
         this.rol = rol;
     }
 
-    public String getIdentification() {
-        return identification;
+    public String getIdentificacion() {
+        return identificacion;
     }
 
-    public void setIdentification(String identification) {
-        this.identification = identification;
+    public void setIdentificacion(String identificacion) {
+        this.identificacion = identificacion;
     }
 
     public String getPassword() {

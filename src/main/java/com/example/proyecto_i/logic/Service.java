@@ -17,16 +17,13 @@ public class Service {
     private final ProductosRepository productosRepository;
     @Autowired
     private final ClientesRepository clientesRepository;
-    @Autowired
-    private final FacturasRepository facturasRepository;
 
     public Service( ProveedorRepository proveedorRepository,
                    AdministradorRepository administradorRepository, ClientesRepository clientesRepository,
-                   ProductosRepository productosRepository, FacturasRepository facturasRepository) {
+                   ProductosRepository productosRepository) {
 
         this.proveedorRepository = proveedorRepository;
         this.administradorRepository = administradorRepository;
-        this.facturasRepository = facturasRepository;
         this.clientesRepository = clientesRepository;
         this.productosRepository = productosRepository;
     }
@@ -141,38 +138,50 @@ public class Service {
         }
     }
 
-    //------------------FACTURAS----------------
-    public void facturasCreate(Factura factura) throws Exception {
-        facturasRepository.save(factura);
-    }
-
-    public List<Factura> facturasSearchAll() throws Exception {
-        return (List<Factura>) facturasRepository.findAll();
-    }
-
-    public Factura facturasSearch(String id) throws Exception {
-        return facturasRepository.findById(id).orElse(null);
-    }
-
-    public void facturasDelete(String id) throws Exception {
-        facturasRepository.deleteById(id);
-    }
+//    //------------------FACTURAS----------------
+//    public void facturasCreate(Factura factura) throws Exception {
+//        facturasRepository.save(factura);
+//    }
+//
+//    public List<Factura> facturasSearchAll() throws Exception {
+//        return (List<Factura>) facturasRepository.findAll();
+//    }
+//
+//    public Factura facturasSearch(String id) throws Exception {
+//        return facturasRepository.findById(id).orElse(null);
+//    }
+//
+//    public void facturasDelete(String id) throws Exception {
+//        facturasRepository.deleteById(id);
+//    }
 
     public Factura facturasUpdate(String id, Factura facturaActualizada) {
-        Optional<Factura> facturaOptional = facturasRepository.findById(id);
-
-        if (facturaOptional.isPresent()) {
-            Factura factura = facturaOptional.get();
-            factura.setFecha(facturaActualizada.getFecha());
-            return (Factura) facturasRepository.save(factura);
-        } else {
-            throw new RuntimeException("Factura no encontrada con ID: " + id);
-        }
+//        Optional<Factura> facturaOptional = facturasRepository.findById(id);
+//
+//        if (facturaOptional.isPresent()) {
+//            Factura factura = facturaOptional.get();
+//            factura.setFecha(facturaActualizada.getFecha());
+//            return (Factura) facturasRepository.save(factura);
+//        } else {
+//            throw new RuntimeException("Factura no encontrada con ID: " + id);
+//        }
+        return facturaActualizada;
     }
 
 
     public void registrar(Administrador administrador) {
         administradorRepository.save(administrador);
     }
+
+    public Optional<Administrador> usuarioRead(String identification) {
+
+        return administradorRepository.findById(identification);
+    }
+
+    public Optional<Proveedor> proveedorRead(String identification) {
+
+        return proveedorRepository.findById(identification);
+    }
 }
+
 

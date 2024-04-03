@@ -4,20 +4,19 @@
     <meta charset="UTF-8">
     <title>Iniciar sesión</title>
     <link rel="stylesheet" th:href="@{/header.css}">
-
     <link rel="stylesheet" th:href="@{/show.css}">
 </head>
 <body>
+<!-- Incluye el fragmento del menú -->
 <div th:replace="fragments/header :: header"></div>
 
-<h2>Iniciar sesión</h2>
-<form action="/login" method="post">
-    <label for="identificacion">Usuario:</label><br>
-    <input type="text" id="identificacion" name="identificacion"><br>
-    <label for="password">Contraseña:</label><br>
-    <input type="password" id="password" name="password"><br><br>
-    <input type="submit" value="Iniciar sesión">
-</form>
+<!-- Muestra el rol del usuario -->
+<div>
+    El rol del usuario es:
+    <span th:if="${session.usuario != null}" th:text="${session.usuario.getRol()}"></span>
+    <span th:unless="${session.usuario != null}">SIN ROL</span>
+</div>
+
 <p>¿No tienes una cuenta? <a href="/registro">Regístrese aquí</a></p>
 </body>
 </html>
