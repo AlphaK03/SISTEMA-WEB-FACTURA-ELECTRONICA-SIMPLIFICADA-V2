@@ -7,7 +7,6 @@ import java.util.Objects;
 
 @Entity
 public class Proveedor {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "identificacion")
     private String identificacion;
@@ -20,13 +19,6 @@ public class Proveedor {
     @Basic
     @Column(name = "correo")
     private String correo;
-    @Basic
-    @Column(name = "contrasena")
-    private String contrasena;
-
-    @Basic
-    @Column(name = "rol")
-    private String rol;
     @OneToMany(mappedBy = "proveedorByProveedor")
     private Collection<Cliente> clientesByIdentificacion;
     @OneToMany(mappedBy = "proveedorByProveedor")
@@ -34,9 +26,7 @@ public class Proveedor {
     @OneToMany(mappedBy = "proveedorByProveedor")
     private Collection<Producto> productosByIdentificacion;
 
-    public String getRol() {
-        return rol;
-    }
+
 
     public String getIdentificacion() {
         return identificacion;
@@ -70,25 +60,18 @@ public class Proveedor {
         this.correo = correo;
     }
 
-    public String getContrasena() {
-        return contrasena;
-    }
-
-    public void setContrasena(String contrasena) {
-        this.contrasena = contrasena;
-    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Proveedor proveedor = (Proveedor) o;
-        return Objects.equals(identificacion, proveedor.identificacion) && Objects.equals(nombre, proveedor.nombre) && Objects.equals(telefono, proveedor.telefono) && Objects.equals(correo, proveedor.correo) && Objects.equals(contrasena, proveedor.contrasena);
+        return Objects.equals(identificacion, proveedor.identificacion) && Objects.equals(nombre, proveedor.nombre) && Objects.equals(telefono, proveedor.telefono) && Objects.equals(correo, proveedor.correo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(identificacion, nombre, telefono, correo, contrasena);
+        return Objects.hash(identificacion, nombre, telefono, correo);
     }
 
     public Collection<Cliente> getClientesByIdentificacion() {

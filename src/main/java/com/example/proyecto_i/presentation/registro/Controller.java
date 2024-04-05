@@ -1,7 +1,8 @@
 package com.example.proyecto_i.presentation.registro;
 
-import com.example.proyecto_i.logic.Administrador;
+import com.example.proyecto_i.logic.Proveedor;
 import com.example.proyecto_i.logic.Service;
+import com.example.proyecto_i.logic.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,8 +13,9 @@ public class Controller {
     @Autowired
     private Service service;
     @PostMapping("/registro")
-    public String registrarAdministrador(Administrador administrador) {
-        service.registrar(administrador);
+    public String registrarAdministrador(Proveedor administrador, Usuario user) {
+        user.setRol("ADM");
+        service.registrar(administrador, user);
         return "redirect:/registroExitoso"; // Redireccionar a una página de registro exitoso
     }
 

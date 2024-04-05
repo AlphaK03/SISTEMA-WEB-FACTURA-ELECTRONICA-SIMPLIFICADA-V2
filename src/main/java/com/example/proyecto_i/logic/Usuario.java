@@ -1,15 +1,36 @@
 package com.example.proyecto_i.logic;
 
+import jakarta.persistence.*;
+
+@Entity
 public class Usuario {
+    @Id
+    @Column(name = "identificacion")
     private String identificacion;
-    private String password;
+    @Basic
+    @Column(name = "contrasena")
+    private String contrasena;
+    @Basic
+    @Column(name = "rol")
     private String rol;
 
 
-    public Usuario(String identificacion, String password, String rol) {
+    public Usuario(String identificacion, String contrasena, String rol) {
         this.identificacion = identificacion;
-        this.password = password;
+        this.contrasena = contrasena;
         this.rol = rol;
+    }
+
+    public Usuario() {
+
+    }
+
+    public String getContrasena() {
+        return contrasena;
+    }
+
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
     }
 
     public String getIdentificacion() {
@@ -18,14 +39,6 @@ public class Usuario {
 
     public void setIdentificacion(String identificacion) {
         this.identificacion = identificacion;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getRol() {

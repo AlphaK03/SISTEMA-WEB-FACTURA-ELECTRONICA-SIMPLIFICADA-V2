@@ -12,18 +12,18 @@ public class Service {
     @Autowired
     private final ProveedorRepository proveedorRepository;
     @Autowired
-    private final AdministradorRepository administradorRepository;
+    private final UsuarioRepository usuarioRepository;
     @Autowired
     private final ProductosRepository productosRepository;
     @Autowired
     private final ClientesRepository clientesRepository;
 
-    public Service( ProveedorRepository proveedorRepository,
-                   AdministradorRepository administradorRepository, ClientesRepository clientesRepository,
+    public Service(ProveedorRepository proveedorRepository,
+                   UsuarioRepository usuarioRepository, ClientesRepository clientesRepository,
                    ProductosRepository productosRepository) {
 
         this.proveedorRepository = proveedorRepository;
-        this.administradorRepository = administradorRepository;
+        this.usuarioRepository = usuarioRepository;
         this.clientesRepository = clientesRepository;
         this.productosRepository = productosRepository;
     }
@@ -36,33 +36,7 @@ public class Service {
         return nombre;
     }
 
-    //------------------ADMINISTRADOR----------------
-    public void administradorCreate (Administrador admin) throws  Exception{
-        administradorRepository.save(admin);
-    }
-    public List<Administrador> administradorSearchAll() throws Exception{
-        return (List<Administrador>) administradorRepository.findAll();
-    }
-    public Administrador administradorSearch(String id)  throws Exception{
-        return administradorRepository.findById(id).orElse(null);
-    }
-    public void administradorDelete (String id)  throws Exception{
-        administradorRepository.deleteById(id);
-    }
-    public Administrador administradorUpdate(String id, Administrador administradorActualizado) {
-        Optional<Administrador> AdministradorOptional = administradorRepository.findById(id);
 
-        if (AdministradorOptional.isPresent()) {
-            Administrador administrador = AdministradorOptional.get();
-            administrador.setNombre(administradorActualizado.getNombre());
-            administrador.setTelefono(administradorActualizado.getTelefono());
-            administrador.setCorreo(administradorActualizado.getCorreo());
-            administrador.setContrasena(administradorActualizado.getContrasena());
-            return administradorRepository.save(administrador);
-        } else {
-            throw new RuntimeException("Administrador no encontrado con ID: " + id);
-        }
-    }
 
     //------------------PROVEEDOR----------------
     public void proveedorCreate (Proveedor prov) throws  Exception{
@@ -83,7 +57,6 @@ public class Service {
             proveedor.setNombre(proveedorActualizado.getNombre());
             proveedor.setTelefono(proveedorActualizado.getTelefono());
             proveedor.setCorreo(proveedorActualizado.getCorreo());
-            proveedor.setContrasena(proveedorActualizado.getContrasena());
             return proveedorRepository.save(proveedor);
         } else {
             throw new RuntimeException("Proveedor no encontrado con ID: " + id);
@@ -169,13 +142,14 @@ public class Service {
     }
 
 
-    public void registrar(Administrador administrador) {
-        administradorRepository.save(administrador);
+    public void registrar(Proveedor administrador, Usuario user) {
+        proveedorRepository.save(administrador);
+        usuarioRepository.save(user);
     }
 
-    public Optional<Administrador> usuarioRead(String identification) {
+    public Optional<Usuario> usuarioRead(String identification) {
 
-        return administradorRepository.findById(identification);
+        return usuarioRepository.findById(identification);
     }
 
     public Optional<Proveedor> proveedorRead(String identification) {
