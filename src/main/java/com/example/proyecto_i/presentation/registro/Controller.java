@@ -13,9 +13,9 @@ public class Controller {
     @Autowired
     private Service service;
     @PostMapping("/registro")
-    public String registrarAdministrador(Proveedor administrador, Usuario user) {
-        user.setRol("ADM");
-        service.registrar(administrador, user);
+    public String registrarAdministrador(Proveedor proveedor, Usuario user) {
+        user.setRol("PRO");
+        service.registrar(proveedor, user);
         return "redirect:/registroExitoso"; // Redireccionar a una página de registro exitoso
     }
 

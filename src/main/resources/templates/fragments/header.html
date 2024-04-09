@@ -13,7 +13,7 @@
         <ul class="Menu">
             <li><a href="/presentation/acercade/show">Acerca</a></li>
             <th:block th:unless="${session.usuario != null}">
-                <li><a href="/presentation/login/show">Login</a></li>
+                <li><a href="/">Login</a></li>
             </th:block>
 
             <th:block th:if="${session.usuario != null}">

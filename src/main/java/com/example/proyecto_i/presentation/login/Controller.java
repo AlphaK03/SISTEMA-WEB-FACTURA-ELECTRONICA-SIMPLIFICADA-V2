@@ -10,7 +10,7 @@ public class Controller {
 
     @Autowired
     private Service service;
-    @GetMapping("presentation/login/show")
+    @GetMapping("/")
     public String showLoginPage() {
         return "presentation/login/show"; // nombre de la vista del login
     }

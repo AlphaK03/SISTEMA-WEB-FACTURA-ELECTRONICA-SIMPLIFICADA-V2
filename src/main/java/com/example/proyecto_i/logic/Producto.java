@@ -9,7 +9,7 @@ public class Producto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "codigo")
-    private String codigo;
+    private int codigo;
     @Basic
     @Column(name = "nombre")
     private String nombre;
@@ -20,11 +20,11 @@ public class Producto {
     @JoinColumn(name = "proveedor", referencedColumnName = "identificacion", nullable = false)
     private Proveedor proveedorByProveedor;
 
-    public String getCodigo() {
+    public int getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(String codigo) {
+    public void setCodigo(String string) {
         this.codigo = codigo;
     }
 
@@ -63,5 +63,14 @@ public class Producto {
 
     public void setProveedorByProveedor(Proveedor proveedorByProveedor) {
         this.proveedorByProveedor = proveedorByProveedor;
+    }
+
+    public Producto(String nombre, String precio, Proveedor proveedorByProveedor) {
+        this.nombre = nombre;
+        this.precio = precio;
+        this.proveedorByProveedor = proveedorByProveedor;
+    }
+
+    public Producto() {
     }
 }

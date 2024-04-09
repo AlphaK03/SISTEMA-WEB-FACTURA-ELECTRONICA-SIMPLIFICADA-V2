@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Agregar Producto</title>
     <link rel="stylesheet" th:href="@{/header.css}">
-    <link rel="stylesheet" th:href="@{/show.css}">
+    <link rel="stylesheet" th:href="@{/agregarProducto.css}">
 </head>
 <body>
 
@@ -20,7 +20,7 @@
 
     <label for="proveedor">Proveedor:</label><br>
     <select id="proveedor" name="proveedor">
-        <option th:each="proveedor : ${proveedores}" th:value="${proveedor.id}" th:text="${proveedor.nombre}"></option>
+        <option th:each="prov : ${proveedores}" th:value="${prov.getIdentificacion()}" th:text="${prov.getNombre()}"></option>
     </select><br>
 
     <button type="submit">Agregar Producto</button>

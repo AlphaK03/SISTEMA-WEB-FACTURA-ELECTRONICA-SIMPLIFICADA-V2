@@ -156,6 +156,10 @@ public class Service {
 
         return proveedorRepository.findById(identification);
     }
+
+    public List<Proveedor> proveedorGetAll() {
+        return (List<Proveedor>) proveedorRepository.findAll();
+    }
 }
 
 

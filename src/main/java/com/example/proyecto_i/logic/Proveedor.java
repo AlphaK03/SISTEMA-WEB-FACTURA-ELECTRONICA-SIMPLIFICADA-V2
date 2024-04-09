@@ -2,6 +2,7 @@ package com.example.proyecto_i.logic;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -97,4 +98,9 @@ public class Proveedor {
     public void setProductosByIdentificacion(Collection<Producto> productosByIdentificacion) {
         this.productosByIdentificacion = productosByIdentificacion;
     }
+
+
+    public Proveedor() {
+    }
+
 }
