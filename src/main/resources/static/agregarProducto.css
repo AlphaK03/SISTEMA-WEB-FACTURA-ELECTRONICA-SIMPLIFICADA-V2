@@ -17,6 +17,14 @@ body {
     margin-top: 20px;
 }
 
+.product-list {
+    background-color: #fff; /* Mismo color de fondo que el contenedor principal */
+    padding: 20px; /* Espaciado interno */
+    border-radius: 5px; /* Borde redondeado */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra */
+    margin-top: 20px; /* Margen superior */
+}
+
 h2 {
     text-align: center;
 }
@@ -34,7 +42,7 @@ input[type="text"],
 input[type="email"],
 input[type="password"],
 select {
-    width: 100%; /* Se ajustó el ancho al 100% */
+    width: 90%; /* Se ajustó el ancho al 100% */
     padding: 10px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
@@ -63,5 +71,55 @@ a {
 
 a:hover {
     text-decoration: underline;
+}
+.container {
+    display: flex;
+    flex-direction: row; /* Organiza los elementos en una fila */
+    justify-content: space-between; /* Espacio uniformemente entre los elementos */
+    margin-top: 20px;
+}
+
+.form-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 45%; /* Define el ancho del formulario */
+}
+
+.product-list {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 45%; /* Define el ancho de la lista de productos */
+}
+
+
+/* Ajustes para la tabla */
+table {
+    width: 100%; /* Ancho completo de la tabla */
+    border-collapse: collapse; /* Colapso de bordes */
+    margin-top: 20px; /* Espacio superior */
+}
+
+/* Estilos para los encabezados */
+th {
+    background-color: #f2f2f2; /* Color de fondo */
+    padding: 8px; /* Espaciado interno */
+    text-align: left; /* Alineación del texto */
+    border-bottom: 1px solid #ddd; /* Borde inferior */
+}
+
+/* Estilos para las celdas */
+td {
+    padding: 8px; /* Espaciado interno */
+    text-align: left; /* Alineación del texto */
+    border-bottom: 1px solid #ddd; /* Borde inferior */
+}
+
+/* Estilos para la primera fila de la tabla */
+tr:first-child {
+    font-weight: bold; /* Texto en negrita */
 }
 

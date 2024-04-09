@@ -1,7 +1,9 @@
 package com.example.proyecto_i.logic;
 import com.example.proyecto_i.data.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import com.example.proyecto_i.data.ProveedorRepository;
@@ -70,7 +72,16 @@ public class Service {
 
     public List<Producto> productosSearchAll(String id_proveedor) throws Exception{
         //Hay que filtrar cada uno de los productos según el proveedor
-        return (List<Producto>) productosRepository.findAll();
+        List<Producto> todos = (List<Producto>) productosRepository.findAll();
+        List<Producto> filtradosPorProveedor = new ArrayList<>();
+
+        for (Producto producto : todos) {
+            if (producto.getProveedorByProveedor().getIdentificacion().equals(id_proveedor)) {
+                filtradosPorProveedor.add(producto);
+            }
+        }
+
+        return filtradosPorProveedor;
     }
     public Optional<Producto> productosSearch(Proveedor prov, String cod)  throws Exception{
         /*Flitrar los productos según el proveedor*/
@@ -160,6 +171,34 @@ public class Service {
     public List<Proveedor> proveedorGetAll() {
         return (List<Proveedor>) proveedorRepository.findAll();
     }
+
+    public List<Usuario> getAll() {
+        return (List<Usuario>) usuarioRepository.findAll();
+    }
+
+    public void actualizarEstadoUsuario(String proveedorIds, String estados) {
+        String[] ids = proveedorIds.split(",\\s*");
+        String[] estadosArray = estados.split(",\\s*");
+
+        if (ids.length != estadosArray.length) {
+            throw new IllegalArgumentException("La cantidad de IDs no coincide con la cantidad de estados.");
+        }
+
+        for (int i = 0; i < ids.length; i++) {
+            String id = ids[i];
+            String estado = estadosArray[i];
+
+            Optional<Usuario> optionalUsuario = usuarioRepository.findById(id);
+            if (optionalUsuario.isPresent()) {
+                Usuario usuario = optionalUsuario.get();
+                usuario.setActivo(estado.equalsIgnoreCase("activo"));
+                usuarioRepository.save(usuario);
+            } else {
+                throw new RuntimeException("No se encontró el usuario con el ID: " + id);
+            }
+        }
+    }
+
 }
 
 

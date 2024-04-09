@@ -28,7 +28,6 @@ public class Proveedor {
     private Collection<Producto> productosByIdentificacion;
 
 
-
     public String getIdentificacion() {
         return identificacion;
     }

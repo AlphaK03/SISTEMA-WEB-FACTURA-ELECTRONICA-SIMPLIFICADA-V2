@@ -4,9 +4,11 @@ USE BD;
 CREATE TABLE Usuario (
     identificacion VARCHAR(20) NOT NULL,
     contrasena VARCHAR(20) NOT NULL,
-	rol VARCHAR(10) not null,
+    rol VARCHAR(10) NOT NULL,
+    activo BOOLEAN NOT NULL DEFAULT true, -- Nuevo atributo booleano para indicar si el usuario está activo
     PRIMARY KEY(identificacion)
 );
+
 
 CREATE TABLE Proveedor (
     identificacion VARCHAR(20) NOT NULL,

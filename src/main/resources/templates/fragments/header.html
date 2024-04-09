@@ -21,10 +21,10 @@
                     <a href="/presentation/facturar/show">Facturar</a>
                 </li>
                 <li th:if="${session.usuario.getRol().equals('PRO')}">
-                    <a href="/presentation/clientes/show">Clientes</a>
+                    <a href="/presentation/clientes">Clientes</a>
                 </li>
                 <li th:if="${session.usuario.getRol().equals('PRO')}">
-                    <a href="/presentation/productos/show">Productos</a>
+                    <a th:href="@{'/presentation/productos/view?proveedorId=' + ${session.usuario.getIdentificacion()}}">Productos</a>
                 </li>
                 <li th:if="${session.usuario.getRol().equals('PRO')}">
                     <a href="/presentation/facturas/show">Facturas</a>

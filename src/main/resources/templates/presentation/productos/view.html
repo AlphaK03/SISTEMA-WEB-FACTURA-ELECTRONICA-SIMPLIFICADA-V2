@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Listado de Productos</title>
+
+    <link rel="stylesheet" th:href="@{/administracion.css}">
+    <link rel="stylesheet" th:href="@{/header.css}">
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<h2>Listado de Productos</h2>
+<ul>
+    <!-- Aquí se iterarán todos los productos y se mostrarán en una lista -->
+    <th:block th:each="producto : ${productos}">
+        <li>
+            <strong>Nombre: </strong><span th:text="${producto.nombre}"></span><br>
+            <strong>Precio: </strong><span th:text="${producto.precio}"></span><br>
+            <!-- Puedes mostrar más detalles del producto aquí si lo deseas -->
+        </li>
+    </th:block>
+</ul>
+</body>
+</html>

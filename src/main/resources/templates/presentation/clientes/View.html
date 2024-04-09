@@ -2,30 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Crear Nuevo Cliente</title>
 </head>
 <body>
-    <header th:replace="~{fragments/header :: header}"></header>
-    <div class = "body">
-        <div>
-            <table><!--Aquí van los items del header --></table>
-        </div>
-        <div>
-            <h1 class = "caption"> Editar...</h1>
-            <form action = "presentation/clientes/create" th:object="${clientesEdit}" method="post">
-                <div class="form">
-                    <div>
-                        <div>Identificacion</div>
-                        <div><input type="text" th:field="*{identificacion}"></div>
-                    </div>
-                    <div><!-- --></div>
-                    <div><!-- --></div>
-                    <div><!-- --></div>
-                    <div class = "heading"></div>
-                </div>
-            </form>
-        </div>
-    </div>
-    <footer th:replace="~{fragments/footer :: footer}"></footer>
+<h2>Crear Nuevo Cliente</h2>
+<form action="/crearCliente" method="post">
+    <label for="identificacion">Identificación:</label><br>
+    <input type="text" id="identificacion" name="identificacion" required><br>
+
+    <label for="nombre">Nombre:</label><br>
+    <input type="text" id="nombre" name="nombre" required><br>
+
+    <label for="telefono">Teléfono:</label><br>
+    <input type="text" id="telefono" name="telefono" required><br>
+
+    <label for="correo">Correo:</label><br>
+    <input type="email" id="correo" name="correo" required><br>
+
+    <input type="submit" value="Crear Cliente">
+</form>
 </body>
 </html>

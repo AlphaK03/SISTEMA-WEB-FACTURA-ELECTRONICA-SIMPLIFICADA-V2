@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" th:href="@{/administracion.css}">
+    <link rel="stylesheet" th:href="@{/header.css}">
 </head>
 <body>
---ADMINISTRADOR
+<div th:replace="fragments/header :: header"></div>
+<h2>Lista de Todos los Proveedores</h2>
+<form action="/actualizarProveedores" method="post">
+    <table>
+        <!-- Por cada proveedor, incluir un campo oculto para el ID y el estado -->
+        <tr th:each="proveedor : ${proveedores}">
+            <input type="hidden" name="proveedorId" th:value="${proveedor.identificacion}" />
+            <td th:text="${proveedor.identificacion}"></td>
+            <td th:text="${proveedor.nombre}"></td>
+            <td th:text="${proveedor.telefono}"></td>
+            <td th:text="${proveedor.correo}"></td>
+            <td>
+                <select name="estado">
+                    <option value="activo">Aceptar</option>
+                    <option value="inactivo">Desactivar</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+    <button type="submit">Actualizar</button>
+</form>
+
 </body>
 </html>
+
+

@@ -14,11 +14,16 @@ public class Usuario {
     @Column(name = "rol")
     private String rol;
 
+    @Basic
+    @Column(name = "activo")
+    private boolean activo;
 
-    public Usuario(String identificacion, String contrasena, String rol) {
+
+    public Usuario(String identificacion, String contrasena, String rol, boolean activo) {
         this.identificacion = identificacion;
         this.contrasena = contrasena;
         this.rol = rol;
+        this.activo = false;
     }
 
     public Usuario() {
@@ -47,5 +52,13 @@ public class Usuario {
 
     public void setRol(String rol) {
         this.rol = rol;
+    }
+
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
     }
 }

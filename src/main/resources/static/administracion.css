@@ -1,0 +1,63 @@
+/* Estilos para la cuerpo y el encabezado */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f2f2f2;
+}
+
+h2 {
+    color: #333;
+}
+
+/* Estilos para la tabla de proveedores */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #007bff; /* Color del encabezado */
+    color: #fff;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2; /* Color de fondo de filas pares */
+}
+
+/* Estilos para el estado activo */
+tr.activo {
+    background-color: #5cb85c; /* Verde */
+    color: #fff; /* Texto blanco en estado activo */
+}
+
+/* Estilos para el estado inactivo */
+tr.inactivo {
+    background-color: #d9534f; /* Rojo */
+    color: #fff; /* Texto blanco en estado inactivo */
+}
+
+select {
+    width: 100px;
+}
+
+/* Estilos para el botón */
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+
