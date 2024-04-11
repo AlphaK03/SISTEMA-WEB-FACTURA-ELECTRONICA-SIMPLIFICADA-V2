@@ -1,0 +1,46 @@
+/* Estilos para la tabla de facturas */
+.invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+/* Estilos para las celdas de encabezado */
+.invoice-table th {
+    background-color: #f2f2f2;
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Estilos para las celdas de datos */
+.invoice-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Estilos para los botones PDF y XML */
+.pdf-button,
+.xml-button {
+    padding: 8px 15px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-transform: uppercase;
+    margin-right: 5px;
+}
+
+.pdf-button:hover,
+.xml-button:hover {
+    background-color: #0056b3;
+}
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f2f2f2;
+}

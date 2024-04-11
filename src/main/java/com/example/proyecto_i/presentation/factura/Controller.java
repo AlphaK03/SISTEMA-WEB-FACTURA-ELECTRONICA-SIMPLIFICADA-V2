@@ -80,17 +80,17 @@ public class Controller {
     //    return "presentation/facturar/crearFactura";
     //}
 
-    @GetMapping("/presentation/facturar/show")
+    @GetMapping("/presentation/facturar/showFacturar")
     public String search(Model model, HttpSession session, @ModelAttribute("proveedor") Proveedor proveedor, @ModelAttribute("facturas") List<Factura> facturas) {
         try {
             facturas = service.facturasSearchByProveedor(proveedor.getIdentificacion());
             model.addAttribute("facturas", facturas);
-            return "presentation/facturar/show";
+            return "/presentation/facturar/showFacturar";
         } catch (Exception e) {
             e.printStackTrace();
             model.addAttribute("mensaje", "Hubo un error al crear una factura. Por favor, inténtalo de nuevo.");
         }
-        return "/presentation/facturar/crearFactura";
+        return "/presentation/facturar/showFacturar";
     }
 
     @GetMapping("agregarDetalle")

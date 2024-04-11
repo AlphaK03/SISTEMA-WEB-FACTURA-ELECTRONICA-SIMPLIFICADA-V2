@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Visualizar facturas</title>
+    <link rel="stylesheet" th:href="@{/header.css}">
+    <link rel="stylesheet" th:href="@{/showFacturar.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<table class="invoice-table">
+    <thead>
+    <tr>
+        <th>Fecha</th>
+        <th>Número</th>
+        <th>Cliente</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="factura : ${facturas}">
+        <td th:text="${factura.getFecha()}"></td>
+        <td th:text="${factura.getNumero()}"></td>
+        <td th:text="${factura.getClienteByCliente().nombre}"></td>
+        <td>
+            <a th:href="@{/presentation/facturar/pdf(numero=${factura.getNumero()})}"><button class="pdf-button">PDF</button></a>
+            <a th:href="@{/presentation/facturar/XML(numero=${factura.getNumero()})}"><button class="xml-button">XML</button></a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
+
+
