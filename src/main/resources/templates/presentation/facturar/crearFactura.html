@@ -10,67 +10,77 @@
 <div th:replace="~{fragments/header :: header}"></div>
 
 <div class="container">
-    <div class="section">
-        <h4>Proveedor:</h4>
-        <label th:text="${proveedor.nombre}"></label>
+    <div class="form-container">
+        <div class="section">
+            <h4>Proveedor:</h4>
+            <label th:text="${proveedor.nombre}"></label>
+        </div>
+
+        <div class="section search">
+            <h4>Buscar Cliente:</h4>
+            <h4>Cliente:</h4>
+            <label th:text="${clienteSearch.getNombre()}"></label><br>
+            <form action="/facturaCliente" method="post">
+                <input type="text" id = "identificacion" name="identificacion" placeholder="Ingrese el nombre del cliente">
+                <button type="submit">Buscar</button>
+            </form>
+        </div>
+
+        <div class="section search">
+            <h4>Buscar Producto:</h4>
+            <form action="/facturaProducto" method="post">
+                <input type="text" id = "codigo" name = "codigo" placeholder="Ingrese el nombre del producto">
+                <button type="submit">Buscar</button>
+            </form>
+        </div>
     </div>
 
-    <div class="section search">
-        <h4>Buscar Cliente:</h4>
-        <input type="text" id="searchClientInput" placeholder="Ingrese el nombre del cliente">
-        <button type="button" class="custom-button" onclick="searchClient()">Buscar</button>
-    </div>
-
-    <div class="section search">
-        <h4>Buscar Producto:</h4>
-        <input type="text" id="searchProductInput" placeholder="Ingrese el nombre del producto">
-        <button type="button" class="custom-button" onclick="searchProduct()">Buscar</button>
+    <div class="product-list">
+        <h2>Lista de Detalles</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Botón de quitar</th>
+                <th>Cantidad</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Monto</th>
+                <th>Botones</th>
+            </tr>
+            </thead>
+            <!-- Para cada objeto detalle que tiene la factura -->
+            <tbody th:each="detalle: ${detalles}">
+            <tr>
+                <td>
+                    <!-- Botón de quitar href actualizar detalle y volver a redirigir a la página crear -->
+                    <!-- href="tomar el detalle y eliminarle el producto/actualizar la base" -->
+                    <button><img src="/images/equis.png" width="20px"/></button>
+                </td>
+                <td th:text="${detalle.getCantidad()}"></td>
+                <td th:text="${detalle.getDescripcion()}">Trensa</td>
+                <td th:text="${detalle.getCodigoproducto().getPrecio()}">Precio en Colones</td>
+                <td>Monto en Colones</td>
+                <!-- Botones de suma o resta de la cantidad -->
+                <td>
+                    <!-- Suma, href post actualizar el detalle -->
+                    <button><img src="/images/suma.png" width="20px"/></button>
+                    <!-- Resta, href post actualizar el detalle -->
+                    <button><img src="/images/resta.png" width="20px"/></button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <!-- Total (factura), llamar a util -->
+        <h4>Total: ... </h4>
     </div>
 </div>
 
-<div class="product-list">
-    <h2>Lista de Detalles</h2>
-    <table>
-        <thead>
-        <tr>
-            <th>Botón de quitar</th>
-            <th>Cantidad</th>
-            <th>Descripción</th>
-            <th>Precio</th>
-            <th>Monto</th>
-            <th>Botones</th>
-        </tr>
-        </thead>
-        <!--Para cada objeto detalle que tiene la factura-->
-        <!--th:each="detalle:${detalles}}"-->
-        <tbody th:each="detalle: ${detalles}">
-        <tr>
-            <td>
-                <!--botón de quitar href actualizar detalle y volver a rederigir a la pagina crear-->
-                <!--href="tomar el detalle y eliminarle el producto/actualizar la base"-->
-                <button><img src="/images/equis.png" width="20px"/></button>
-            </td>
-            <!--th:text= ${detalle.getCantidad()}-->
-            <td th:text="${detalle.getCantidad()}"></td>
-            <!--th:text ="@{detalle.getProducto().getNombre()}"-->
-            <td>Trensa</td>
-            <!--th:text = "@{detalle.getProducto.getPrecio()}"-->
-            <td>Precio en Colones</td>
-            <!--th:text = "@{llamar a la clase de util total(detalle)}"-->
-            <td>Monto en Colones</td>
-            <!--Botones de suma o resta de la cantidad-->
-            <td>
-                <!--Suma, href post actualizar el detalle-->
-                <button><img src="/images/suma.png" width="20px"/></button>
-                <!--Resta, href post actualizar el detalle-->
-                <button><img src="/images/resta.png" width="20px"/></button>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <!--Total (factura), llamar a util-->
-    <h4>Total: ... </h4>
-</div>
+<form id="FormFactura" action="/updateDetalle" method="post">
+    <!-- Aquí van los campos para la creación de la factura -->
+    <button type="submit">Crear Factura</button>
+</form>
 
 </body>
 </html>
+
+
