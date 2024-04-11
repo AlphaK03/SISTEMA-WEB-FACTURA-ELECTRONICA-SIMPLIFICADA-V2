@@ -2,29 +2,30 @@ package com.example.proyecto_i.logic;
 
 import jakarta.persistence.*;
 
-import java.util.Objects;
+import java.util.Collection;
 
 @Entity
 public class Factura {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "numero")
-    private String numero;
+    private int numero;
     @Basic
     @Column(name = "fecha")
     private String fecha;
+    @OneToMany(mappedBy = "facturaByNumerofactura")
+    private Collection<Detalle> detallesByNumero;
     @ManyToOne
     @JoinColumn(name = "proveedor", referencedColumnName = "identificacion", nullable = false)
     private Proveedor proveedorByProveedor;
     @ManyToOne
     @JoinColumn(name = "cliente", referencedColumnName = "identificacion", nullable = false)
-    private Cliente clientesByCliente;
+    private Cliente clienteByCliente;
 
-    public String getNumero() {
+    public int getNumero() {
         return numero;
     }
 
-    public void setNumero(String numero) {
+    public void setNumero(int numero) {
         this.numero = numero;
     }
 
@@ -40,13 +41,28 @@ public class Factura {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Factura facturas = (Factura) o;
-        return Objects.equals(numero, facturas.numero) && Objects.equals(fecha, facturas.fecha);
+
+        Factura factura = (Factura) o;
+
+        if (numero != factura.numero) return false;
+        if (fecha != null ? !fecha.equals(factura.fecha) : factura.fecha != null) return false;
+
+        return true;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(numero, fecha);
+        int result = numero;
+        result = 31 * result + (fecha != null ? fecha.hashCode() : 0);
+        return result;
+    }
+
+    public Collection<Detalle> getDetallesByNumero() {
+        return detallesByNumero;
+    }
+
+    public void setDetallesByNumero(Collection<Detalle> detallesByNumero) {
+        this.detallesByNumero = detallesByNumero;
     }
 
     public Proveedor getProveedorByProveedor() {
@@ -57,11 +73,11 @@ public class Factura {
         this.proveedorByProveedor = proveedorByProveedor;
     }
 
-    public Cliente getClientesByCliente() {
-        return clientesByCliente;
+    public Cliente getClienteByCliente() {
+        return clienteByCliente;
     }
 
-    public void setClientesByCliente(Cliente clientesByCliente) {
-        this.clientesByCliente = clientesByCliente;
+    public void setClienteByCliente(Cliente clienteByCliente) {
+        this.clienteByCliente = clienteByCliente;
     }
 }

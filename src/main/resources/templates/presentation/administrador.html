@@ -7,7 +7,7 @@
     <link rel="stylesheet" th:href="@{/header.css}">
 </head>
 <body>
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="~{fragments/header :: header}"></div>
 <h2>Lista de Todos los Proveedores</h2>
 <form action="/actualizarProveedores" method="post">
     <table>

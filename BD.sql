@@ -51,6 +51,7 @@ CREATE TABLE Detalle (
 	numerofactura int NOT NULL,
 	codigoproducto int NOT NULL,
 	descripcion varchar (70) NOT NULL,
+    cantidad int NOT NULL,
 	PRIMARY KEY (numero),
 	FOREIGN KEY (numerofactura) REFERENCES Factura (numero),
 	FOREIGN KEY (codigoproducto) REFERENCES Producto (codigo)

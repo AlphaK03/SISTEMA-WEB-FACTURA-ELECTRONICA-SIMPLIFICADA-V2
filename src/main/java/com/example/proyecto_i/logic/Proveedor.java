@@ -2,9 +2,7 @@ package com.example.proyecto_i.logic;
 
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Objects;
 
 @Entity
 public class Proveedor {
@@ -26,7 +24,6 @@ public class Proveedor {
     private Collection<Factura> facturasByIdentificacion;
     @OneToMany(mappedBy = "proveedorByProveedor")
     private Collection<Producto> productosByIdentificacion;
-
 
     public String getIdentificacion() {
         return identificacion;
@@ -60,18 +57,29 @@ public class Proveedor {
         this.correo = correo;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         Proveedor proveedor = (Proveedor) o;
-        return Objects.equals(identificacion, proveedor.identificacion) && Objects.equals(nombre, proveedor.nombre) && Objects.equals(telefono, proveedor.telefono) && Objects.equals(correo, proveedor.correo);
+
+        if (identificacion != null ? !identificacion.equals(proveedor.identificacion) : proveedor.identificacion != null)
+            return false;
+        if (nombre != null ? !nombre.equals(proveedor.nombre) : proveedor.nombre != null) return false;
+        if (telefono != null ? !telefono.equals(proveedor.telefono) : proveedor.telefono != null) return false;
+        if (correo != null ? !correo.equals(proveedor.correo) : proveedor.correo != null) return false;
+
+        return true;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(identificacion, nombre, telefono, correo);
+        int result = identificacion != null ? identificacion.hashCode() : 0;
+        result = 31 * result + (nombre != null ? nombre.hashCode() : 0);
+        result = 31 * result + (telefono != null ? telefono.hashCode() : 0);
+        result = 31 * result + (correo != null ? correo.hashCode() : 0);
+        return result;
     }
 
     public Collection<Cliente> getClientesByIdentificacion() {
@@ -97,9 +105,4 @@ public class Proveedor {
     public void setProductosByIdentificacion(Collection<Producto> productosByIdentificacion) {
         this.productosByIdentificacion = productosByIdentificacion;
     }
-
-
-    public Proveedor() {
-    }
-
 }

@@ -19,15 +19,19 @@ public class Service {
     private final ProductosRepository productosRepository;
     @Autowired
     private final ClientesRepository clientesRepository;
+    @Autowired
+    private final FacturasRepository facturasRepository;
+
 
     public Service(ProveedorRepository proveedorRepository,
                    UsuarioRepository usuarioRepository, ClientesRepository clientesRepository,
-                   ProductosRepository productosRepository) {
+                   ProductosRepository productosRepository, FacturasRepository facturasRepository) {
 
         this.proveedorRepository = proveedorRepository;
         this.usuarioRepository = usuarioRepository;
         this.clientesRepository = clientesRepository;
         this.productosRepository = productosRepository;
+        this.facturasRepository = facturasRepository;
     }
 
 
@@ -122,22 +126,22 @@ public class Service {
         }
     }
 
-//    //------------------FACTURAS----------------
-//    public void facturasCreate(Factura factura) throws Exception {
-//        facturasRepository.save(factura);
-//    }
-//
-//    public List<Factura> facturasSearchAll() throws Exception {
-//        return (List<Factura>) facturasRepository.findAll();
-//    }
-//
-//    public Factura facturasSearch(String id) throws Exception {
-//        return facturasRepository.findById(id).orElse(null);
-//    }
-//
-//    public void facturasDelete(String id) throws Exception {
-//        facturasRepository.deleteById(id);
-//    }
+
+    public void facturasCreate(Factura factura) throws Exception {
+        facturasRepository.save(factura);
+    }
+
+    public List<Factura> facturasSearchByProveedor(String idProveedor) throws Exception {
+        return facturasRepository.findByProveedor(idProveedor);
+    }
+
+    public Factura facturasSearchById(int id) throws Exception {
+        return facturasRepository.findById(String.valueOf(id)).orElse(null);
+    }
+
+    public void facturasDelete(String id) throws Exception {
+        facturasRepository.deleteById(id);
+    }
 
     public Factura facturasUpdate(String id, Factura facturaActualizada) {
 //        Optional<Factura> facturaOptional = facturasRepository.findById(id);
@@ -191,11 +195,13 @@ public class Service {
             Optional<Usuario> optionalUsuario = usuarioRepository.findById(id);
             if (optionalUsuario.isPresent()) {
                 Usuario usuario = optionalUsuario.get();
-                usuario.setActivo(estado.equalsIgnoreCase("activo"));
+                byte activoByte = (byte) (estado != null && estado.equalsIgnoreCase("activo") ? 1 : 0);
+                usuario.setActivo(activoByte);
                 usuarioRepository.save(usuario);
             } else {
                 throw new RuntimeException("No se encontró el usuario con el ID: " + id);
             }
+
         }
     }
 

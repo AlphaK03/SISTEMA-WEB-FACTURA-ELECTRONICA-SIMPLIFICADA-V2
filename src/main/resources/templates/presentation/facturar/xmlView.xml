@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+</beans>-->
+<FacturaElectronica>
+    <Clave>24560683106815061216505160306</Clave>
+    <CodigoActividad>4654684</CodigoActividad>
+    <NumeroConsecutivo>43131664414</NumeroConsecutivo>
+    <FechaEmision th:text="${factura.getFecha()}"></FechaEmision>
+    <Emisor>
+        <Nombre th:text="${factura.provedor.getNombre()}"></Nombre>
+        <Identificacion>
+            <Tipo>01</Tipo>
+            <Numero th:text="${factura.proveedor.getIdentificacion()}"></Numero>
+        </Identificacion>
+        <NombreComercial th:text="${factura.proveedor.getNombre()}"></NombreComercial>
+    </Emisor>
+    <Receptor>
+
+    </Receptor>
+    <Detalle>
+
+    </Detalle>
+    <ResumenFactura>
+
+    </ResumenFactura>
+</FacturaElectronica>

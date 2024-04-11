@@ -3,11 +3,9 @@ package com.example.proyecto_i.logic;
 import jakarta.persistence.*;
 
 import java.util.Collection;
-import java.util.Objects;
 
 @Entity
 public class Cliente {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "identificacion")
     private String identificacion;
@@ -23,7 +21,7 @@ public class Cliente {
     @ManyToOne
     @JoinColumn(name = "proveedor", referencedColumnName = "identificacion", nullable = false)
     private Proveedor proveedorByProveedor;
-    @OneToMany(mappedBy = "clientesByCliente")
+    @OneToMany(mappedBy = "clienteByCliente")
     private Collection<Factura> facturasByIdentificacion;
 
     public String getIdentificacion() {
@@ -62,13 +60,25 @@ public class Cliente {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Cliente clientes = (Cliente) o;
-        return Objects.equals(identificacion, clientes.identificacion) && Objects.equals(nombre, clientes.nombre) && Objects.equals(telefono, clientes.telefono) && Objects.equals(correo, clientes.correo);
+
+        Cliente cliente = (Cliente) o;
+
+        if (identificacion != null ? !identificacion.equals(cliente.identificacion) : cliente.identificacion != null)
+            return false;
+        if (nombre != null ? !nombre.equals(cliente.nombre) : cliente.nombre != null) return false;
+        if (telefono != null ? !telefono.equals(cliente.telefono) : cliente.telefono != null) return false;
+        if (correo != null ? !correo.equals(cliente.correo) : cliente.correo != null) return false;
+
+        return true;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(identificacion, nombre, telefono, correo);
+        int result = identificacion != null ? identificacion.hashCode() : 0;
+        result = 31 * result + (nombre != null ? nombre.hashCode() : 0);
+        result = 31 * result + (telefono != null ? telefono.hashCode() : 0);
+        result = 31 * result + (correo != null ? correo.hashCode() : 0);
+        return result;
     }
 
     public Proveedor getProveedorByProveedor() {

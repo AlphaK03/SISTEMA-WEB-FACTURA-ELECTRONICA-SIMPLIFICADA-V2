@@ -9,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -41,15 +40,15 @@ public class Controller {
                 httpSession.setAttribute("usuario", userDB.get());
                 String rol = userDB.get().getRol();
                 httpSession.setAttribute("rol", rol); // Guarda el rol en la sesión
-                if(Objects.equals(usuario.getContrasena(), userDB.get().getContrasena()) && userDB.get().isActivo()){
+                if (Objects.equals(usuario.getContrasena(), userDB.get().getContrasena()) && (userDB.get().getActivo() != 0)) {
                     switch (rol) {
                         case "ADM":
                             return "redirect:/presentation/administrador";
                         case "PRO":
-
                             return "/presentation/productos/agregarProducto";
                     }
-                };
+                }
+
 
             }
         } catch(Exception ex) {

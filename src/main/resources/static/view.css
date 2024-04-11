@@ -1,0 +1,76 @@
+/* Estilos para el cuerpo de la página */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Contenedor principal */
+.container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    width: 80%; /* Ancho del contenedor principal */
+    max-width: 600px; /* Ancho máximo del contenedor */
+}
+
+/* Encabezado */
+h2 {
+    text-align: center;
+}
+
+/* Estilos para los formularios */
+form {
+    width: 100%; /* Ancho completo del formulario */
+}
+
+label {
+    display: block;
+    margin-bottom: -10px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: calc(100% - 20px); /* Ancho del campo de entrada con margen */
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box; /* Incluir el relleno y el borde en el ancho total */
+}
+
+input[type="submit"] {
+    width: calc(100% - 20px); /* Ancho del botón con margen */
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    box-sizing: border-box; /* Incluir el relleno y el borde en el ancho total */
+}
+
+input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Estilos para los enlaces */
+a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+

@@ -18,7 +18,7 @@
 
             <th:block th:if="${session.usuario != null}">
                 <li th:if="${session.usuario.getRol().equals('PRO')}">
-                    <a href="/presentation/facturar/show">Facturar</a>
+                    <a href="/crearFactura">Facturar</a>
                 </li>
                 <li th:if="${session.usuario.getRol().equals('PRO')}">
                     <a href="/presentation/clientes">Clientes</a>
@@ -27,7 +27,7 @@
                     <a th:href="@{'/presentation/productos/view?proveedorId=' + ${session.usuario.getIdentificacion()}}">Productos</a>
                 </li>
                 <li th:if="${session.usuario.getRol().equals('PRO')}">
-                    <a href="/presentation/facturas/show">Facturas</a>
+                    <a href="/presentation/facturar/show">Facturas</a>
                 </li>
                 <li th:if="${session.usuario.getRol().equals('ADM')}">
                     <a href="/presentation/administrar/show">Administrar</a>

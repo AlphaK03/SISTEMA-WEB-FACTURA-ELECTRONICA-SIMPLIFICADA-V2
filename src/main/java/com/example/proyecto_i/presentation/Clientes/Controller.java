@@ -18,22 +18,24 @@ import java.util.Optional;
 @org.springframework.stereotype.Controller("clientes")
 @SessionAttributes({"clientes","clienteSearch","clienteEdit","proveedor"})
 public class Controller {
-    @Autowired private Service service;
+    @Autowired
+    private Service service;
     @ModelAttribute("clientes") public Iterable<Cliente> clientes(){return new ArrayList<Cliente>();    }
-    @ModelAttribute("clieneteSearch") public Cliente clieenteSearch (){return new Cliente();}
+    @ModelAttribute("clienteSearch") public Cliente clieenteSearch (){return new Cliente();}
     @ModelAttribute("clienteEdit") public Cliente clienteEdit(){return new Cliente();}
     @ModelAttribute("proveedor") public Proveedor proveedor (){return new Proveedor(); }
 
     @PostMapping("/crearCliente")
-    public String crearCliente(@ModelAttribute("cliente") Cliente cliente, Model model, HttpSession session){
+    public String crearCliente(Cliente cliente, Model model, HttpSession session){
         try {
-            Usuario usuario = (Usuario) session.getAttribute("usuario");
+            Usuario usuario = new Usuario();
+            usuario = (Usuario) session.getAttribute("usuario");
             Optional<Proveedor> proveedorOpt = service.proveedorRead(usuario.getIdentificacion());
             if(proveedorOpt.isPresent()){
                 Proveedor proveedor = proveedorOpt.get();
                 cliente.setProveedorByProveedor(proveedor);
             }
-
+            cliente.setFacturasByIdentificacion(new ArrayList<>());
             service.clientesCreate(cliente);
 
             model.addAttribute("mensaje", "El cliente se ha creado exitosamente.");
@@ -41,14 +43,14 @@ public class Controller {
             e.printStackTrace();
             model.addAttribute("mensaje", "Hubo un error al crear el cliente. Por favor, inténtalo de nuevo.");
         }
-        return "presentation/clientes/View";
+        return "presentation/clientes/view";
     }
 
 
     @GetMapping("/presentation/clientes")
     public String search(Proveedor proveedor, Model model){
 
-        return "presentation/clientes/View";
+        return "presentation/clientes/view";
     }
 
 }

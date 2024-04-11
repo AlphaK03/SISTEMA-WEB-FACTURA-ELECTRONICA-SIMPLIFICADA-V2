@@ -2,11 +2,10 @@ package com.example.proyecto_i.logic;
 
 import jakarta.persistence.*;
 
-import java.util.Objects;
+import java.util.Collection;
 
 @Entity
 public class Producto {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "codigo")
     private int codigo;
@@ -16,6 +15,8 @@ public class Producto {
     @Basic
     @Column(name = "precio")
     private String precio;
+    @OneToMany(mappedBy = "productoByCodigoproducto")
+    private Collection<Detalle> detallesByCodigo;
     @ManyToOne
     @JoinColumn(name = "proveedor", referencedColumnName = "identificacion", nullable = false)
     private Proveedor proveedorByProveedor;
@@ -24,7 +25,7 @@ public class Producto {
         return codigo;
     }
 
-    public void setCodigo(String string) {
+    public void setCodigo(int codigo) {
         this.codigo = codigo;
     }
 
@@ -48,13 +49,30 @@ public class Producto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Producto productos = (Producto) o;
-        return Objects.equals(codigo, productos.codigo) && Objects.equals(nombre, productos.nombre) && Objects.equals(precio, productos.precio);
+
+        Producto producto = (Producto) o;
+
+        if (codigo != producto.codigo) return false;
+        if (nombre != null ? !nombre.equals(producto.nombre) : producto.nombre != null) return false;
+        if (precio != null ? !precio.equals(producto.precio) : producto.precio != null) return false;
+
+        return true;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(codigo, nombre, precio);
+        int result = codigo;
+        result = 31 * result + (nombre != null ? nombre.hashCode() : 0);
+        result = 31 * result + (precio != null ? precio.hashCode() : 0);
+        return result;
+    }
+
+    public Collection<Detalle> getDetallesByCodigo() {
+        return detallesByCodigo;
+    }
+
+    public void setDetallesByCodigo(Collection<Detalle> detallesByCodigo) {
+        this.detallesByCodigo = detallesByCodigo;
     }
 
     public Proveedor getProveedorByProveedor() {
@@ -63,14 +81,5 @@ public class Producto {
 
     public void setProveedorByProveedor(Proveedor proveedorByProveedor) {
         this.proveedorByProveedor = proveedorByProveedor;
-    }
-
-    public Producto(String nombre, String precio, Proveedor proveedorByProveedor) {
-        this.nombre = nombre;
-        this.precio = precio;
-        this.proveedorByProveedor = proveedorByProveedor;
-    }
-
-    public Producto() {
     }
 }
