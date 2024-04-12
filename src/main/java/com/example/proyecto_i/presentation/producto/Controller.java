@@ -28,11 +28,11 @@ public class Controller {
                 producto.setProveedorByProveedor(proveedor);
                 service.productosCreate(producto);
             }
-            session.setAttribute("provID", provID); // Guardar el ID del proveedor en la sesión
+            session.setAttribute("provID", provID);
 
-            return "redirect:/login"; // Redirigir a la misma página después de agregar el producto
+            return "redirect:/login";
         } catch (Exception e) {
-            return "redirect:/error"; // Redirigir a una página de error en caso de excepción
+            return "redirect:/error";
         }
     }
 

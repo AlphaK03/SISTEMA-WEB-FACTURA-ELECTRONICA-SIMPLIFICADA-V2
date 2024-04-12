@@ -3,12 +3,10 @@ import com.example.proyecto_i.data.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import com.example.proyecto_i.data.ProveedorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
 @org.springframework.stereotype.Service("service")
 public class Service {
@@ -133,18 +131,6 @@ public class Service {
 
 
     public void facturasCreate(Factura factura) throws Exception {
-        List<Detalle> nuevosDetalles = new ArrayList<>();
-        for(Detalle detalle: factura.getDetallesByNumero()){
-            Detalle nuevoDetalle = new Detalle();
-            nuevoDetalle.setCantidad(detalle.getCantidad());
-            nuevoDetalle.setDescripcion(detalle.getDescripcion());
-            nuevoDetalle.setProductoByCodigoproducto(detalle.getProductoByCodigoproducto());
-            // Deja el número como null
-            nuevosDetalles.add(nuevoDetalle);
-            detallesRepository.save(nuevoDetalle);
-        }
-        factura.setDetallesByNumero(nuevosDetalles);
-
         facturasRepository.save(factura);
     }
 
@@ -232,12 +218,12 @@ public class Service {
         detallesRepository.save(detalle);
     }
 
-    public Detalle detalleSearch(int numero) throws Exception {
-        return detallesRepository.findById(String.valueOf(numero)).orElse(null);
+    public Optional<Detalle> detalleSearch(int numero) throws Exception {
+        return detallesRepository.findById(numero);
     }
 
     public void detalleDelete(int numero) throws Exception {
-        detallesRepository.deleteById(String.valueOf(numero));
+        detallesRepository.deleteById(numero);
     }
 
     public Detalle detalleUpdate(int numero, Detalle detalleActualizado) {
@@ -247,6 +233,12 @@ public class Service {
     public List<Factura> facturasGetAll() {
         return (List<Factura>) facturasRepository.findAll();
     }
+
+    public List<Detalle> detallesGetAll() {
+        return (List<Detalle>) detallesRepository.findAll();
+    }
+
+
 }
 
 

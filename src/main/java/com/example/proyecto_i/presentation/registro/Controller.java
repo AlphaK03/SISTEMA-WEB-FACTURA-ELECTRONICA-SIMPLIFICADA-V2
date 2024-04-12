@@ -16,12 +16,12 @@ public class Controller {
     public String registrarAdministrador(Proveedor proveedor, Usuario user) {
         user.setRol("PRO");
         service.registrar(proveedor, user);
-        return "redirect:/registroExitoso"; // Redireccionar a una página de registro exitoso
+        return "redirect:/registroExitoso";
     }
 
     @GetMapping("/registroExitoso")
     public String registroExitoso() {
-        return "/presentation/registro/registroExitoso"; // Redireccionar a una página de registro exitoso
+        return "/presentation/registro/registroExitoso";
     }
 
 }

@@ -29,6 +29,9 @@
                 <li th:if="${session.usuario.getRol().equals('PRO')}">
                     <a href="/presentation/facturar/showFacturar">Facturas</a>
                 </li>
+                <li th:if="${session.usuario.getRol().equals('PRO')}">
+                    <a href="/editarPerfil">Perfil</a>
+                </li>
                 <li th:if="${session.usuario.getRol().equals('ADM')}">
                     <a href="/presentation/administrar/show">Administrar</a>
                 </li>

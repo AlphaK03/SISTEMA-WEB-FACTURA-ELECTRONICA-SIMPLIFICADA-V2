@@ -19,6 +19,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 
 import java.io.PrintWriter;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -86,10 +87,6 @@ public class Controller {
             List<Detalle> detalles = (List<Detalle>) session.getAttribute("facturaDetalles");
 
             model.addAttribute("detalles", detalles);
-        /*Usuario usuario = (Usuario) session.getAttribute("usuario");
-        proveedor = service.proveedorRead(usuario.getIdentificacion());
-        model.addAttribute("proveedor", proveedor);*/
-            //cliente = model.getAttribute("clienteFactura")
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -100,11 +97,6 @@ public class Controller {
     }
 
 
-    // Elimina esta anotación duplicada
-    //@GetMapping("/presentation/facturar/crearFactura")
-    //public String saveFactura(Proveedor proveedor, Model model){
-    //    return "presentation/facturar/crearFactura";
-    //}
 
     @GetMapping("/presentation/facturar/showFacturar")
     public String search(Model model, HttpSession session, @ModelAttribute("proveedor") Proveedor proveedor, @ModelAttribute("facturas") List<Factura> facturas) {
@@ -130,27 +122,22 @@ public class Controller {
 
     @GetMapping("/presentation/facturar/pdf")
     public void pdf(Factura facturanumero, HttpServletResponse response) throws Exception {
-        // Obtener la factura según el número proporcionado
         Factura factura = service.facturasSearchById(facturanumero.getNumero());
 
-        // Inicializar el PdfWriter con el flujo de salida del HttpServletResponse
         PdfWriter writer = new PdfWriter(response.getOutputStream());
 
-        // Inicializar el PdfDocument y el Document
         PdfDocument pdf = new PdfDocument(writer);
         Document document = new Document(pdf, PageSize.A4);
 
-        // Agregar contenido al documento (por ejemplo, un título y texto)
         Paragraph title = new Paragraph("Factura");
         Paragraph content = new Paragraph("Número de factura: " + factura.getNumero() + "\n" +
                 "Fecha: " + factura.getFecha() + "\n" +
                 "Cliente: " + factura.getClienteByCliente().getNombre());
 
-        // Agregar el contenido al documento
+
         document.add(title);
         document.add(content);
 
-        // Cerrar el documento al finalizar
         document.close();
     }
 
@@ -206,7 +193,7 @@ public class Controller {
             // Verificar si ya existe el atributo en la sesión
             List<Detalle> detallesEnSesion = (List<Detalle>) session.getAttribute("facturaDetalles");
             if (detallesEnSesion != null) {
-                // Si ya hay detalles en la sesión, agregamos el nuevo detalle a la lista existente
+
                 boolean exist = false;
                 for (Detalle det : detallesEnSesion){
                     if (Objects.equals(det.getDescripcion(), detalle.getDescripcion())) {
@@ -222,14 +209,12 @@ public class Controller {
                 }
                 detallesEnSesion.add(detalle);
             } else {
-                // Si no hay detalles en la sesión, creamos una nueva lista y agregamos el nuevo detalle
                 detallesEnSesion = new ArrayList<>();
                 detallesEnSesion.add(detalle);
             }
-            // Establecemos la lista actualizada en la sesión
             session.setAttribute("facturaDetalles", detallesEnSesion);
 
-            factura.setClienteByCliente(cliente); // Asignamos el cliente a la factura
+            factura.setClienteByCliente(cliente);
             factura.setDetallesByNumero(detalles);
             model.addAttribute("detalles", detalles);
             return "redirect:/crearFactura";
@@ -281,15 +266,12 @@ public class Controller {
 
     @PostMapping("/facturaFinal")
     public String crearFactura() {
-        // Aquí irá la lógica para crear la factura
-        return "redirect:/creado"; // Redirige a una página de éxito después de crear la factura
+        return "redirect:/creado";
     }
 
     @GetMapping("/creado")
     public String crearFacturaGet(Model model, HttpSession session) {
-        // Obtener los detalles de la factura de la sesión
         List<Detalle> detalles = (List<Detalle>) session.getAttribute("facturaDetalles");
-        // Asumiendo que tienes una clase Usuario y guardas el usuario en la sesión
         Usuario usuario = (Usuario) session.getAttribute("usuario");
         Optional<Proveedor> proveedor = service.proveedorRead(usuario.getIdentificacion());
         Cliente cliente = (Cliente) model.getAttribute("clienteSearch");
@@ -300,26 +282,33 @@ public class Controller {
                 factura.setProveedorByProveedor(proveedor.get());
             }
 
-            // Obtener la fecha del sistema
-            LocalDate fechaActual = LocalDate.now();
-            // Convertir la fecha a un formato de cadena
+            LocalDateTime fechaActual = LocalDateTime.now();
             String fechaFormateada = fechaActual.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            // Establecer la fecha en la factura
             factura.setFecha(fechaFormateada);
             factura.setClienteByCliente(cliente);
-            factura.setDetallesByNumero(detalles);
+           // factura.setDetallesByNumero(detalles);
 
-            // Llamar al método en la capa de servicio para crear la factura
             service.facturasCreate(factura);
+            for(Factura factura1 : service.facturasGetAll()){
+                if(Objects.equals(factura1.getFecha(), factura.getFecha())){
+                    factura = factura1;
+                    break;
+                }
+            }
 
-            // Eliminar los detalles de la factura de la sesión después de crear la factura
+            for(Detalle detalle: detalles){
+                detalle.setFacturaByNumerofactura(factura);
+                service.detalleCreate(detalle);
+            }
+
+
             session.removeAttribute("facturaDetalles");
 
-            return "/presentation/registroExitoso"; // Redirige a una página de éxito después de crear la factura
+            return "/presentation/registroExitoso";
         } catch (Exception e) {
             e.printStackTrace();
             model.addAttribute("mensaje", "Hubo un error al crear una factura. Por favor, inténtalo de nuevo.");
-            return "/error"; // Retorna a la página de creación de factura con un mensaje de error
+            return "/error";
         }
     }
 }

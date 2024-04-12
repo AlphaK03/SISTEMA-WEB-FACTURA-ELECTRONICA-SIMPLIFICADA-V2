@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
@@ -64,5 +65,32 @@ public class Controller {
         httpSession.invalidate();
         return "presentation/login/show";
     }
+
+    @GetMapping("/editarPerfil")
+    public String perfilConfig(HttpSession httpSession, Model model) {
+        // Recuperar proveedor de la sesión o de la base de datos (dependiendo de cómo se almacenen)
+        Usuario usuario = (Usuario) httpSession.getAttribute("usuario");
+
+        Optional<Proveedor> proveedor = service.proveedorRead(usuario.getIdentificacion());
+
+        if (proveedor.isPresent()) {
+            model.addAttribute("proveedor", proveedor.get());
+            return "presentation/perfil";
+        } else {
+            return "redirect:/login";
+        }
+    }
+
+    @PostMapping("/editarPerfil")
+    public String guardarPerfil(@ModelAttribute("proveedor") Proveedor proveedorActualizado) {
+
+        service.proveedorUpdate(proveedorActualizado.getIdentificacion(), proveedorActualizado);
+
+        return "redirect:/editarPerfil";
+    }
+
+
+
+
 
 }
