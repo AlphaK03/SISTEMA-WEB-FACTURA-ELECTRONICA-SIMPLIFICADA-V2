@@ -60,6 +60,7 @@ public class Controller {
 
     @GetMapping("/presentation/login/logout")
     public String logout(HttpSession httpSession){
+        httpSession.removeAttribute("facturaDetalles");
         httpSession.invalidate();
         return "presentation/login/show";
     }

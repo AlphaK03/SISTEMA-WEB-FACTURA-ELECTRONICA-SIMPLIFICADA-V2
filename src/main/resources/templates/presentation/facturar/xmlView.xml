@@ -8,14 +8,14 @@
     <Clave>24560683106815061216505160306</Clave>
     <CodigoActividad>4654684</CodigoActividad>
     <NumeroConsecutivo>43131664414</NumeroConsecutivo>
-    <FechaEmision th:text="${factura.getFecha()}"></FechaEmision>
+    <FechaEmision th:text="${factura.getFecha()}"/>
     <Emisor>
-        <Nombre th:text="${factura.provedor.getNombre()}"></Nombre>
+        <Nombre th:text="${factura.proveedorByProveedor.nombre}"></Nombre>
         <Identificacion>
             <Tipo>01</Tipo>
-            <Numero th:text="${factura.proveedor.getIdentificacion()}"></Numero>
+            <Numero th:text="${factura.proveedorByProveedor.identificacion}"></Numero>
         </Identificacion>
-        <NombreComercial th:text="${factura.proveedor.getNombre()}"></NombreComercial>
+        <NombreComercial th:text="${factura.clienteByCliente.nombre}"></NombreComercial>
     </Emisor>
     <Receptor>
 

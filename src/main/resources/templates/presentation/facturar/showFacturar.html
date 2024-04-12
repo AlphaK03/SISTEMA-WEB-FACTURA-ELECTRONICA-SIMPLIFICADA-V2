@@ -24,14 +24,22 @@
         <td th:text="${factura.getNumero()}"></td>
         <td th:text="${factura.getClienteByCliente().nombre}"></td>
         <td>
-            <a th:href="@{/presentation/facturar/pdf(numero=${factura.getNumero()})}"><button class="pdf-button">PDF</button></a>
-            <a th:href="@{/presentation/facturar/XML(numero=${factura.getNumero()})}"><button class="xml-button">XML</button></a>
+            <!-- Enlace para generar PDF -->
+            <a th:href="@{'/presentation/facturar/pdf?numero=' + ${factura.getNumero()}}">
+                <button class="pdf-button">PDF</button>
+            </a>
+            <!-- Enlace para generar XML -->
+            <a th:href="@{'/presentation/facturar/xml?numero=' + ${factura.getNumero()}}">
+                <button class="xml-button">XML</button>
+            </a>
         </td>
     </tr>
+
     </tbody>
 </table>
 
 </body>
 </html>
+
 
 

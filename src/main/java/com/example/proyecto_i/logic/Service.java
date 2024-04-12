@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import com.example.proyecto_i.data.ProveedorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
 @org.springframework.stereotype.Service("service")
 public class Service {
@@ -21,17 +22,21 @@ public class Service {
     private final ClientesRepository clientesRepository;
     @Autowired
     private final FacturasRepository facturasRepository;
+    @Autowired
+    private final DetallesRepository detallesRepository;
+
 
 
     public Service(ProveedorRepository proveedorRepository,
                    UsuarioRepository usuarioRepository, ClientesRepository clientesRepository,
-                   ProductosRepository productosRepository, FacturasRepository facturasRepository) {
+                   ProductosRepository productosRepository, FacturasRepository facturasRepository, DetallesRepository detallesRepository) {
 
         this.proveedorRepository = proveedorRepository;
         this.usuarioRepository = usuarioRepository;
         this.clientesRepository = clientesRepository;
         this.productosRepository = productosRepository;
         this.facturasRepository = facturasRepository;
+        this.detallesRepository = detallesRepository;
     }
 
 
@@ -128,8 +133,24 @@ public class Service {
 
 
     public void facturasCreate(Factura factura) throws Exception {
+        List<Detalle> nuevosDetalles = new ArrayList<>();
+        for(Detalle detalle: factura.getDetallesByNumero()){
+            Detalle nuevoDetalle = new Detalle();
+            nuevoDetalle.setCantidad(detalle.getCantidad());
+            nuevoDetalle.setDescripcion(detalle.getDescripcion());
+            nuevoDetalle.setProductoByCodigoproducto(detalle.getProductoByCodigoproducto());
+            // Deja el número como null
+            nuevosDetalles.add(nuevoDetalle);
+            detallesRepository.save(nuevoDetalle);
+        }
+        factura.setDetallesByNumero(nuevosDetalles);
+
         facturasRepository.save(factura);
     }
+
+
+
+
 
     public List<Factura> facturasSearchByProveedor(String idProveedor) throws Exception {
         return facturasRepository.findByProveedor(idProveedor);
@@ -205,6 +226,27 @@ public class Service {
         }
     }
 
+
+
+    public void detalleCreate(Detalle detalle) throws Exception {
+        detallesRepository.save(detalle);
+    }
+
+    public Detalle detalleSearch(int numero) throws Exception {
+        return detallesRepository.findById(String.valueOf(numero)).orElse(null);
+    }
+
+    public void detalleDelete(int numero) throws Exception {
+        detallesRepository.deleteById(String.valueOf(numero));
+    }
+
+    public Detalle detalleUpdate(int numero, Detalle detalleActualizado) {
+        return new Detalle();
+    }
+
+    public List<Factura> facturasGetAll() {
+        return (List<Factura>) facturasRepository.findAll();
+    }
 }
 
 

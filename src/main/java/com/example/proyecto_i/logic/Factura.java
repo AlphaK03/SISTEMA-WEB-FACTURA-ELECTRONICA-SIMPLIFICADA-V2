@@ -80,4 +80,15 @@ public class Factura {
     public void setClienteByCliente(Cliente clienteByCliente) {
         this.clienteByCliente = clienteByCliente;
     }
+
+    public Factura(int numero, String fecha, Collection<Detalle> detallesByNumero, Proveedor proveedorByProveedor, Cliente clienteByCliente) {
+        this.numero = numero;
+        this.fecha = fecha;
+        this.detallesByNumero = detallesByNumero;
+        this.proveedorByProveedor = proveedorByProveedor;
+        this.clienteByCliente = clienteByCliente;
+    }
+
+    public Factura() {
+    }
 }
