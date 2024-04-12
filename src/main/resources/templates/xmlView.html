@@ -2,9 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Proyecto 1 - Programación VI</title>
+    <link rel="stylesheet" th:href="@{/xmlView.css}">
+    <link rel="stylesheet" th:href="@{/header.css}">
 </head>
 <body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="header">
+    <div class="title">ESCUELA DE INFORMÁTICA</div>
+    <div class="subtitle">UNIVERSIDAD NACIONAL DE COSTA RICA</div>
+    <div class="subtitle">PROYECTO 1 - PROGRAMACIÓN VI</div>
+    <div class="subtitle">PROFESOR: JOSÉ SÁNCHEZ SALAZAR</div>
+    <div class="subtitle">CICLO 1 2024</div>
+</div>
 
+<div class="students">
+    <div class="title">ESTUDIANTES:</div>
+    <ul class="list">
+        <li>KEYLOR JOSUÉ CORTÉS CASCANTE</li>
+        <li>ABIGAIL SALAS RAMIREZ</li>
+        <li>BAYRON PARRA AVILA</li>
+    </ul>
+</div>
 </body>
 </html>

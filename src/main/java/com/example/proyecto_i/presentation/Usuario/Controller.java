@@ -90,6 +90,11 @@ public class Controller {
     }
 
 
+    @GetMapping("/xmlView")
+    public String acerca(HttpSession httpSession){
+        return "xmlView";
+    }
+
 
 
 
