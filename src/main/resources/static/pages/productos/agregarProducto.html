@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Agregar Producto</title>
-    <link rel="stylesheet" th:href="@{/header.css}">
-    <link rel="stylesheet" th:href="@{/agregarProducto.css}">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/agregarProducto.css">
 </head>
 <body>
 
-<div th:replace="~{fragments/header :: header}"></div>
+<div id="header"></div>
 
 <h2>Agregar Producto</h2>
 <div class="container">
@@ -21,9 +21,9 @@
             <input type="text" id="precio" name="precio" required><br>
 
             <label for="proveedor">Proveedor:</label><br>
-            <span th:text="${proveedor.getNombre()}"></span><br>
+            <span text="${proveedor.getNombre()}"></span><br>
 
-            <input type="hidden" id="proveedor" name="proveedor" th:value="${proveedor.getIdentificacion()}" />
+            <input type="hidden" id="proveedor" name="proveedor" value="${proveedor.getIdentificacion()}" />
 
             <button type="submit">Agregar Producto</button>
         </form>
@@ -38,16 +38,31 @@
                 <!-- Agrega más encabezados si es necesario -->
             </tr>
             <!-- Iterar sobre los productos y mostrar cada uno en una fila de la tabla -->
-            <th:block th:each="producto : ${productos}">
+            <block each="producto : ${productos}">
                 <tr>
-                    <td th:text="${producto.nombre}"></td>
-                    <td th:text="${producto.precio}"></td>
+                    <td text="${producto.nombre}"></td>
+                    <td text="${producto.precio}"></td>
                     <!-- Agrega más columnas para más atributos del producto -->
                 </tr>
-            </th:block>
+            </block>
         </table>
     </div>
 </div>
+
+<!-- Script para cargar el encabezado -->
+<script>
+    window.onload = function() {
+        var headerContainer = document.getElementById("header");
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                headerContainer.innerHTML = this.responseText;
+            }
+        };
+        xhttp.open("GET", "/pages/header.html", true);
+        xhttp.send();
+    };
+</script>
 
 </body>
 </html>

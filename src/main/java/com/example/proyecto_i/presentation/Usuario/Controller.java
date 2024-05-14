@@ -46,7 +46,7 @@ public class Controller {
                         case "ADM":
                             return "redirect:/presentation/administrador";
                         case "PRO":
-                            return "/presentation/productos/agregarProducto";
+                            return "/pages/productos/agregarProducto";
                     }
                 }
 
@@ -63,7 +63,7 @@ public class Controller {
     public String logout(HttpSession httpSession){
         httpSession.removeAttribute("facturaDetalles");
         httpSession.invalidate();
-        return "presentation/login/show";
+        return "pages/login/show";
     }
 
     @GetMapping("/editarPerfil")
@@ -75,7 +75,7 @@ public class Controller {
 
         if (proveedor.isPresent()) {
             model.addAttribute("proveedor", proveedor.get());
-            return "presentation/perfil";
+            return "pages/otros/perfil";
         } else {
             return "redirect:/login";
         }

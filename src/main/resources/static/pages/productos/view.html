@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Listado de Productos</title>
+
+    <link rel="stylesheet" href="@{css/administracion.css}">
+    <link rel="stylesheet" href="@{css/header.css}">
+</head>
+<body>
+<div replace="pages/header :: header"></div>
+
+<h2>Listado de Productos</h2>
+<ul>
+    <!-- Aquí se iterarán todos los productos y se mostrarán en una lista -->
+    <block each="producto : ${productos}">
+        <li>
+            <strong>Nombre: </strong><span text="${producto.nombre}"></span><br>
+            <strong>Precio: </strong><span text="${producto.precio}"></span><br>
+            <!-- Puedes mostrar más detalles del producto aquí si lo deseas -->
+        </li>
+    </block>
+</ul>
+</body>
+</html>

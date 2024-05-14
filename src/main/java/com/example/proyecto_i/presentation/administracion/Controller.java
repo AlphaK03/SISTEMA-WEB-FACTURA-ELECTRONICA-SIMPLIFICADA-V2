@@ -1,15 +1,12 @@
 package com.example.proyecto_i.presentation.administracion;
 
 import com.example.proyecto_i.logic.*;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @org.springframework.stereotype.Controller("administracion")
 public class Controller {
@@ -26,7 +23,7 @@ public class Controller {
         model.addAttribute("productos", productos);
 
 
-        return "/presentation/productos/view";
+        return "pages/productos/view";
     }
 
     @GetMapping("/presentation/administrador")
@@ -41,7 +38,7 @@ public class Controller {
         model.addAttribute("usuarios", usuarios);
         model.addAttribute("proveedores", proveedores);
 
-        return "/presentation/administrador";
+        return "/pages/otros/administrador";
     }
 
 

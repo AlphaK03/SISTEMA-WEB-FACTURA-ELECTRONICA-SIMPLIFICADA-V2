@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>Crear factura</title>
-    <link rel="stylesheet" th:href="@{/header.css}">
-    <link rel="stylesheet" th:href="@{/crearFactura.css}">
+    <link rel="stylesheet" href="@{/header.css}">
+    <link rel="stylesheet" href="@{/crearFactura.css}">
 </head>
 <body>
-<div th:replace="~{fragments/header :: header}"></div>
+<div replace="~{fragments/header :: header}"></div>
 
 <div class="container">
     <div class="form-container">
         <div class="section">
             <h4>Proveedor:</h4>
-            <label th:text="${proveedor.nombre}"></label>
+            <label text="${proveedor.nombre}"></label>
         </div>
 
         <div class="section search">
             <h4>Buscar Cliente:</h4>
             <h4>Cliente:</h4>
-            <label th:text="${clienteSearch.getNombre()}"></label><br>
+            <label text="${clienteSearch.getNombre()}"></label><br>
             <form action="/facturaCliente" method="post">
                 <input type="text" id = "identificacion" name="identificacion" placeholder="Ingrese el nombre del cliente">
                 <button type="submit">Buscar</button>
@@ -28,9 +28,9 @@
 
         <div class="section search">
             <h4>Buscar Producto:</h4>
-            <td th:text="${factura.setDetallesByNumero(detalles)}"></td>
+            <td text="${factura.setDetallesByNumero(detalles)}"></td>
 
-            <label th:text="${producto.getNombre()}"></label><br>
+            <label text="${producto.getNombre()}"></label><br>
             <form action="/facturaProducto" method="post">
                 <input type="text" id = "codigo" name = "codigo" placeholder="Ingrese el nombre del producto">
                 <button type="submit">Buscar</button>
@@ -52,16 +52,16 @@
             </tr>
             </thead>
             <!-- Para cada objeto detalle que tiene la factura -->
-            <tbody th:each="detalle: ${detalles}">
+            <tbody each="detalle: ${detalles}">
             <tr>
                 <td>
                     <!-- Botón de quitar href actualizar detalle y volver a redirigir a la página crear -->
                     <!-- href="tomar el detalle y eliminarle el producto/actualizar la base" -->
                     <button><img src="/images/equis.png" width="20px"/></button>
                 </td>
-                <td th:text="${detalle.getCantidad()}"></td>
-                <td th:text="${detalle.getDescripcion()}">Trensa</td>
-                <td th:text="${detalle.getProductoByCodigoproducto().getPrecio()}">Precio en Colones</td>
+                <td text="${detalle.getCantidad()}"></td>
+                <td text="${detalle.getDescripcion()}">Trensa</td>
+                <td text="${detalle.getProductoByCodigoproducto().getPrecio()}">Precio en Colones</td>
                 <td>Monto en Colones</td>
                 <!-- Botones de suma o resta de la cantidad -->
                 <td>

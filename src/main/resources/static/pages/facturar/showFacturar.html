@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Visualizar facturas</title>
-    <link rel="stylesheet" th:href="@{/header.css}">
-    <link rel="stylesheet" th:href="@{/showFacturar.css}">
+    <link rel="stylesheet" href="@{/header.css}">
+    <link rel="stylesheet" href="@{/showFacturar.css}">
 </head>
 <body>
-<div th:replace="~{fragments/header :: header}"></div>
+<div replace="~{fragments/header :: header}"></div>
 
 <table class="invoice-table">
     <thead>
@@ -19,17 +19,17 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="factura : ${facturas}">
-        <td th:text="${factura.getFecha()}"></td>
-        <td th:text="${factura.getNumero()}"></td>
-        <td th:text="${factura.getClienteByCliente().nombre}"></td>
+    <tr each="factura : ${facturas}">
+        <td text="${factura.getFecha()}"></td>
+        <td text="${factura.getNumero()}"></td>
+        <td text="${factura.getClienteByCliente().nombre}"></td>
         <td>
             <!-- Enlace para generar PDF -->
-            <a th:href="@{'/presentation/facturar/pdf?numero=' + ${factura.getNumero()}}">
+            <a href="@{'/presentation/facturar/pdf?numero=' + ${factura.getNumero()}}">
                 <button class="pdf-button">PDF</button>
             </a>
             <!-- Enlace para generar XML -->
-            <a th:href="@{'/presentation/facturar/xml?numero=' + ${factura.getNumero()}}">
+            <a href="@{'/presentation/facturar/xml?numero=' + ${factura.getNumero()}}">
                 <button class="xml-button">XML</button>
             </a>
         </td>

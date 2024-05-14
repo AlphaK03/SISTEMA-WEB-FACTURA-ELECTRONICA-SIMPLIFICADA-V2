@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Título de tu página</title>
+    <link rel="stylesheet" href="/css/header.css">
+</head>
+<body>
+<header fragment="header" class="header">
+    <div id="titulo-header">Facturación Electrónica</div>
+    <div class="logo"></div>
+    <div>
+        <ul class="Menu">
+            <li><a href="/xmlView">Acerca</a></li>
+            <block unless="${session.usuario != null}">
+                <li><a href="/static">Login</a></li>
+            </block>
+
+            <block if="${session.usuario != null}">
+                <li if="${session.usuario.getRol().equals('PRO')}">
+                    <a href="/crearFactura">Facturar</a>
+                </li>
+                <li if="${session.usuario.getRol().equals('PRO')}">
+                    <a href="/presentation/clientes">Clientes</a>
+                </li>
+                <li if="${session.usuario.getRol().equals('PRO')}">
+                    <a href="@{'/presentation/productos/view?proveedorId=' + ${session.usuario.getIdentificacion()}}">Productos</a>
+                </li>
+                <li if="${session.usuario.getRol().equals('PRO')}">
+                    <a href="/presentation/facturar/showFacturar">Facturas</a>
+                </li>
+                <li if="${session.usuario.getRol().equals('PRO')}">
+                    <a href="/editarPerfil">Perfil</a>
+                </li>
+                <li if="${session.usuario.getRol().equals('ADM')}">
+                    <a href="/presentation/administrar/show">Administrar</a>
+                </li>
+            </block>
+            <block if="${session.usuario != null}">
+                <li><a href="/presentation/login/logout">Logout</a></li>
+            </block>
+        </ul>
+    </div>
+</header>
+</body>
+</html>
+
+

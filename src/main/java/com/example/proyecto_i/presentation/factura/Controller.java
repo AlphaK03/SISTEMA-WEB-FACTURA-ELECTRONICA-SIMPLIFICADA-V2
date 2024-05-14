@@ -9,16 +9,9 @@ import com.itextpdf.layout.element.Paragraph;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.thymeleaf.context.Context;
-import org.thymeleaf.spring6.SpringTemplateEngine;
-import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
-import org.thymeleaf.templatemode.TemplateMode;
 
-import java.io.PrintWriter;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -93,7 +86,7 @@ public class Controller {
             model.addAttribute("mensaje", "Hubo un error al crear una factura. Por favor, inténtalo de nuevo.");
         }
 
-        return "presentation/facturar/crearFactura";
+        return "pages/facturar/crearFactura";
     }
 
 
@@ -116,7 +109,7 @@ public class Controller {
             e.printStackTrace();
             model.addAttribute("mensaje", "Hubo un error al crear una factura. Por favor, inténtalo de nuevo.");
         }
-        return "/presentation/facturar/showFacturar";
+        return "/pages/facturar/showFacturar";
     }
 
 
@@ -143,22 +136,7 @@ public class Controller {
 
     @GetMapping("/presentation/facturar/xml")
     public void xml(Factura facturaNumero, HttpServletResponse response)throws Exception{
-        Factura factura = service.facturasSearchById(facturaNumero.getNumero());
-        SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
-        resolver.setApplicationContext(new AnnotationConfigApplicationContext());
-        resolver.setPrefix("classpath:/templates/");
-        resolver.setSuffix(".xml");
-        resolver.setCharacterEncoding("UTF-8");
-        resolver.setTemplateMode(TemplateMode.XML);
-        SpringTemplateEngine engine = new SpringTemplateEngine();
-        engine.setTemplateResolver(resolver);
-        Context ctx = new Context();
-        ctx.setVariable("factura", factura);
-        String xml = engine.process("presentation/facturar/xmlView", ctx);
-        response.setContentType("application/xml");
-        PrintWriter writer = response.getWriter();
-        writer.print(xml);
-        writer.close();
+
     }
 
     @GetMapping("agregarDetalle")
@@ -304,11 +282,11 @@ public class Controller {
 
             session.removeAttribute("facturaDetalles");
 
-            return "/presentation/registroExitoso";
+            return "/pages/otros/registroExitoso";
         } catch (Exception e) {
             e.printStackTrace();
             model.addAttribute("mensaje", "Hubo un error al crear una factura. Por favor, inténtalo de nuevo.");
-            return "/error";
+            return "pages/error";
         }
     }
 }

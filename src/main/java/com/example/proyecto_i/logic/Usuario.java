@@ -17,6 +17,15 @@ public class Usuario {
     @Column(name = "activo")
     private byte activo;
 
+    public Usuario(String identificacion, Object o, String rol) {
+        this.identificacion = identificacion;
+        this.rol = rol;
+    }
+
+    public Usuario() {
+
+    }
+
     public String getIdentificacion() {
         return identificacion;
     }

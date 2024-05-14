@@ -58,7 +58,7 @@ public class Controller {
         model.addAttribute("provID", provID);
 
 
-        return "/presentation/productos/agregarProducto";
+        return "/pages/productos/agregarProducto";
     }
 
 

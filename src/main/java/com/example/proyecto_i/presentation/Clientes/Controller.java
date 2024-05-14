@@ -43,14 +43,14 @@ public class Controller {
             e.printStackTrace();
             model.addAttribute("mensaje", "Hubo un error al crear el cliente. Por favor, inténtalo de nuevo.");
         }
-        return "presentation/clientes/view";
+        return "pages/clientes/view";
     }
 
 
     @GetMapping("/presentation/clientes")
     public String search(Proveedor proveedor, Model model){
 
-        return "presentation/clientes/view";
+        return "pages/clientes/view";
     }
 
 }

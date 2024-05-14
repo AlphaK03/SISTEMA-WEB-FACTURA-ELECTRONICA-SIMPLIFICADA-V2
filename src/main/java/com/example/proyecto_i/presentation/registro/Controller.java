@@ -21,7 +21,7 @@ public class Controller {
 
     @GetMapping("/registroExitoso")
     public String registroExitoso() {
-        return "/presentation/registro/registroExitoso";
+        return "/pages/registro/registroExitoso";
     }
 
 }
