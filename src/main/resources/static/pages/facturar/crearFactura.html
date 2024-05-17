@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Crear factura</title>
-    <link rel="stylesheet" href="@{/header.css}">
-    <link rel="stylesheet" href="@{/crearFactura.css}">
+    <link rel="stylesheet" href="/css/crearFactura.css">
+    <link rel="stylesheet" href="/css/menu.css">
 </head>
 <body>
-<div replace="~{fragments/header :: header}"></div>
+<div id="menu" class="menu-container"></div>
 
 <div class="container">
     <div class="form-container">
@@ -82,7 +82,7 @@
     <!-- Aquí van los campos para la creación de la factura -->
     <button type="submit">Crear Factura</button>
 </form>
-
+<script src="/js/app.js"></script>
 </body>
 </html>
 

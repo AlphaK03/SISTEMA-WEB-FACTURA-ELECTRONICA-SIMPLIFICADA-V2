@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Editar Perfil</title>
-    <link rel="stylesheet" href="@{/header.css}">
-    <link rel="stylesheet" href="@{/show.css}">
+    <link rel="stylesheet" href="/css/show.css">
+    <link rel="stylesheet" href="/css/menu.css">
 </head>
 <body>
-<div replace="fragments/header :: header"></div>
+<div id="menu" class="menu-container"></div>
 
 <h2>Configurar Perfil</h2>
 <form action="/editarPerfil" method="post">
@@ -21,6 +21,7 @@
     <input type="email" id="correo" name="correo" value="${proveedor.correo}"><br>
     <input type="submit" value="Guardar Cambios">
 </form>
+<script src="/js/app.js"></script>
 </body>
 </html>
 

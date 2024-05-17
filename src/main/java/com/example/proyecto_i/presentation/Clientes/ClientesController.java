@@ -7,17 +7,14 @@ import com.example.proyecto_i.logic.Usuario;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Optional;
-
-@org.springframework.stereotype.Controller("clientes")
+@RestController
+@RequestMapping("/api/clientes")
 @SessionAttributes({"clientes","clienteSearch","clienteEdit","proveedor"})
-public class Controller {
+public class ClientesController {
     @Autowired
     private Service service;
     @ModelAttribute("clientes") public Iterable<Cliente> clientes(){return new ArrayList<Cliente>();    }
@@ -47,11 +44,7 @@ public class Controller {
     }
 
 
-    @GetMapping("/presentation/clientes")
-    public String search(Proveedor proveedor, Model model){
 
-        return "pages/clientes/view";
-    }
 
 }
 

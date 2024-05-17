@@ -9,6 +9,7 @@ import com.itextpdf.layout.element.Paragraph;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,10 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-
-@org.springframework.stereotype.Controller("facturas")
+@RestController
+@RequestMapping("/api/facturas")
 @SessionAttributes({"facturas","clienteSearch","proveedor", "productoSearch", "producto"})
-public class Controller {
+public class FacturaController {
     @Autowired
     private Service service;
 
@@ -42,7 +43,8 @@ public class Controller {
         return new Producto();
     }
 
-    @ModelAttribute("proveedor")
+  /*
+  *   @ModelAttribute("proveedor")
     public Proveedor proveedor(HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
         Optional<Proveedor> prov = service.proveedorRead(usuario.getIdentificacion());
@@ -51,7 +53,7 @@ public class Controller {
             proveedor = prov.get();
         }
         return proveedor;
-    }
+    }*/
 
     @ModelAttribute("detalles")
     public Iterable<Detalle> detalles() {
@@ -289,38 +291,22 @@ public class Controller {
             return "pages/error";
         }
     }
+
+
+
+    //ACTUALIZACIÓN-----------------------
+
+    @GetMapping("/proveedorID")
+    public Proveedor obtenerProveedorID(Authentication authentication) {
+        String username = authentication.getName();
+        return service.proveedorRead(username).orElse(null);
+    }
+    @GetMapping("/listar-facturas")
+    public List<FacturaSimpleDTO> listarFacturasPorProveedor(Authentication authentication) {
+        return service.facturasByProveedor(authentication.getName());
+    }
+
 }
-
-
-    /*
-    @GetMapping("/presentation/facturar/pdf")
-    public void pdf(Factura facturanumero, HttpServletResponse response) throws Exception {
-        Factura factura = service.facturasSearchById(facturanumero.getId());
-        PdfWriter writer = new PdfWriter(response.getOutputStream());
-        PdfDocument pdf = new PdfDocument(writer);
-        Document document = new Document(pdf, PageSize.A4);
-    }
-    @GetMapping("/presentation/facturas/xml")
-    public void xml(Factura facturaNumero, HttpServletResponse response)throws Exception{
-        Factura factura = service.facturasSearchById(facturaNumero.getId());
-        SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
-        resolver.setApplicationContext(new AnnotationConfigApplicationContext());
-        resolver.setPrefix("classpath:/templates/");
-        resolver.setSuffix(".xml");
-        resolver.setCharacterEncoding("UTF-8");
-        resolver.setTemplateMode(TemplateMode.XML);
-        SpringTemplateEngine engine = new SpringTemplateEngine();
-        engine.setTemplateResolver(resolver);
-        Context ctx = new Context();
-        ctx.setVariable("factura", factura);
-        String xml = engine.process("presentation/facturar/xmlView", ctx);
-        response.setContentType("application/xml");
-        PrintWriter writer = response.getWriter();
-        writer.print(xml);
-        writer.close();
-    }
-    */
-
 
 
 

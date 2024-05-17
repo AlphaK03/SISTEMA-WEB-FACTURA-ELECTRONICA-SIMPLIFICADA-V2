@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="@{/administracion.css}">
-    <link rel="stylesheet" href="@{/header.css}">
+    <link rel="stylesheet" href="/css/administracion.css">
+    <link rel="stylesheet" href="/css/menu.css">
 </head>
 <body>
-<div replace="~{fragments/header :: header}"></div>
+<div id="menu" class="menu-container"></div>
+
 <h2>Lista de Todos los Proveedores</h2>
 <form action="/actualizarProveedores" method="post">
     <table>
@@ -28,6 +29,7 @@
     </table>
     <button type="submit">Actualizar</button>
 </form>
+<script src="/js/app.js"></script>
 
 </body>
 </html>

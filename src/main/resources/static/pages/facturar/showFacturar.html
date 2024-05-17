@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Visualizar facturas</title>
-    <link rel="stylesheet" href="@{/header.css}">
-    <link rel="stylesheet" href="@{/showFacturar.css}">
+    <link rel="stylesheet" href="/css/showFacturar.css">
+    <link rel="stylesheet" href="/css/menu.css">
 </head>
 <body>
-<div replace="~{fragments/header :: header}"></div>
+<div id="menu" class="menu-container"></div>
 
 <table class="invoice-table">
     <thead>
@@ -18,28 +18,63 @@
         <th>Acciones</th>
     </tr>
     </thead>
-    <tbody>
-    <tr each="factura : ${facturas}">
-        <td text="${factura.getFecha()}"></td>
-        <td text="${factura.getNumero()}"></td>
-        <td text="${factura.getClienteByCliente().nombre}"></td>
-        <td>
-            <!-- Enlace para generar PDF -->
-            <a href="@{'/presentation/facturar/pdf?numero=' + ${factura.getNumero()}}">
-                <button class="pdf-button">PDF</button>
-            </a>
-            <!-- Enlace para generar XML -->
-            <a href="@{'/presentation/facturar/xml?numero=' + ${factura.getNumero()}}">
-                <button class="xml-button">XML</button>
-            </a>
-        </td>
-    </tr>
-
+    <tbody id="facturas-body"> <!-- Identificador agregado para el cuerpo de la tabla -->
+    <!-- Aquí se insertarán las filas de las facturas -->
     </tbody>
 </table>
 
+<script src="/js/app.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const facturasTableBody = document.getElementById('facturas-body'); // Obtener el cuerpo de la tabla de facturas
+
+        // Cargar lista de facturas
+        fetch('/api/facturas/listar-facturas')
+            .then(response => response.json())
+            .then(data => {
+                facturasTableBody.innerHTML = ''; // Limpiar contenido previo
+                data.forEach(factura => {
+                    const row = document.createElement('tr');
+                    const fechaCell = document.createElement('td');
+                    const numeroCell = document.createElement('td');
+                    const clienteCell = document.createElement('td');
+                    const accionesCell = document.createElement('td');
+                    const pdfButton = document.createElement('button');
+                    const xmlButton = document.createElement('button');
+                    const pdfLink = document.createElement('a');
+                    const xmlLink = document.createElement('a');
+
+                    fechaCell.textContent = factura.fecha;
+                    numeroCell.textContent = factura.numero;
+                    clienteCell.textContent = factura.clienteIdentificacion; // Acceso a la propiedad clienteIdentificacion
+
+                    pdfButton.textContent = 'PDF';
+                    pdfLink.href = `/presentation/facturar/pdf?numero=${factura.numero}`;
+                    pdfLink.appendChild(pdfButton);
+
+                    xmlButton.textContent = 'XML';
+                    xmlLink.href = `/presentation/facturar/xml?numero=${factura.numero}`;
+                    xmlLink.appendChild(xmlButton);
+
+                    accionesCell.appendChild(pdfLink);
+                    accionesCell.appendChild(xmlLink);
+
+                    row.appendChild(fechaCell);
+                    row.appendChild(numeroCell);
+                    row.appendChild(clienteCell);
+                    row.appendChild(accionesCell);
+
+                    facturasTableBody.appendChild(row);
+                });
+            })
+            .catch(error => console.error('Error al cargar facturas:', error));
+    });
+</script>
+
 </body>
 </html>
+
+
 
 
 

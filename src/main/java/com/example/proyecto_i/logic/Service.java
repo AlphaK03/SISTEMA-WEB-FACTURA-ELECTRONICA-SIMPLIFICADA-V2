@@ -3,17 +3,24 @@ import com.example.proyecto_i.data.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.example.proyecto_i.data.ProveedorRepository;
+import com.example.proyecto_i.security.UserDetailsImp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @org.springframework.stereotype.Service("service")
 public class Service {
     @Autowired
     private final ProveedorRepository proveedorRepository;
     @Autowired
-    private final UsuarioRepository usuarioRepository;
+    private UsuarioRepository usuarioRepository;
     @Autowired
     private final ProductosRepository productosRepository;
     @Autowired
@@ -35,6 +42,7 @@ public class Service {
         this.productosRepository = productosRepository;
         this.facturasRepository = facturasRepository;
         this.detallesRepository = detallesRepository;
+
     }
 
 
@@ -73,6 +81,14 @@ public class Service {
     }
 
     //------------------PRODUCTOS----------------
+
+    public List<ProductoSimpleDTO> productosByProveedor(String idProveedor) {
+        List<Producto> productos = productosRepository.findByProveedorByProveedorIdentificacion(idProveedor);
+        return productos.stream()
+                .map(producto -> new ProductoSimpleDTO(producto.getNombre(), producto.getPrecio()))
+                .collect(Collectors.toList());
+    }
+
     public void productosCreate (Producto product) throws  Exception{
         productosRepository.save(product);
     }
@@ -84,6 +100,7 @@ public class Service {
 
         for (Producto producto : todos) {
             if (producto.getProveedorByProveedor().getIdentificacion().equals(id_proveedor)) {
+                producto.setProveedorByProveedor(null);
                 filtradosPorProveedor.add(producto);
             }
         }
@@ -136,6 +153,28 @@ public class Service {
 
 
 
+    public List<FacturaSimpleDTO> facturasByProveedor(String idProveedor) {
+        List<Factura> facturas = new ArrayList<>();
+
+        facturas = facturasGetAll();
+        List<Factura> listaFiltrada = new ArrayList<>();
+
+        for(Factura factura : facturas){
+            if(Objects.equals(factura.getProveedorByProveedor().getIdentificacion(), proveedorRepository.findById(idProveedor).get().getIdentificacion())){
+                listaFiltrada.add(factura);
+            }
+        }
+
+        return listaFiltrada.stream()
+                .map(factura -> convertToDTO(factura))
+                .collect(Collectors.toList());
+    }
+
+    private FacturaSimpleDTO convertToDTO(Factura factura) {
+        return new FacturaSimpleDTO(factura.getNumero(), factura.getFecha(),
+                factura.getProveedorByProveedor().getIdentificacion(),
+                factura.getClienteByCliente().getIdentificacion());
+    }
 
 
     public List<Factura> facturasSearchByProveedor(String idProveedor) throws Exception {
@@ -238,6 +277,11 @@ public class Service {
         return (List<Detalle>) detallesRepository.findAll();
     }
 
+
+    @Autowired
+    public void UsuarioService(UsuarioRepository usuarioRepository) {
+        this.usuarioRepository = usuarioRepository;
+    }
 
 }
 

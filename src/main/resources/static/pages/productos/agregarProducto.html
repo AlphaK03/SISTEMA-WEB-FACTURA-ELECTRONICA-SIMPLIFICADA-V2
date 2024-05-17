@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Agregar Producto</title>
-    <link rel="stylesheet" href="/css/header.css">
     <link rel="stylesheet" href="/css/agregarProducto.css">
+    <link rel="stylesheet" href="/css/menu.css">
 </head>
 <body>
 
-<div id="header"></div>
+<div id="menu" class="menu-container"></div>
+
 
 <h2>Agregar Producto</h2>
 <div class="container">
     <div class="form-container">
-        <form action="/agregarProducto" method="post">
+        <form id="productoForm">
             <label for="nombre">Nombre del Producto:</label><br>
             <input type="text" id="nombre" name="nombre" required><br>
 
@@ -21,51 +22,91 @@
             <input type="text" id="precio" name="precio" required><br>
 
             <label for="proveedor">Proveedor:</label><br>
-            <span text="${proveedor.getNombre()}"></span><br>
+            <span id="proveedorNombre"></span><br>
 
-            <input type="hidden" id="proveedor" name="proveedor" value="${proveedor.getIdentificacion()}" />
+            <input type="hidden" id="proveedor" name="proveedor" value="" />
 
             <button type="submit">Agregar Producto</button>
         </form>
-
     </div>
     <div class="product-list">
         <h2>Listado de Productos</h2>
         <table>
+            <thead>
             <tr>
                 <th>Nombre</th>
                 <th>Precio</th>
-                <!-- Agrega más encabezados si es necesario -->
             </tr>
-            <!-- Iterar sobre los productos y mostrar cada uno en una fila de la tabla -->
-            <block each="producto : ${productos}">
-                <tr>
-                    <td text="${producto.nombre}"></td>
-                    <td text="${producto.precio}"></td>
-                    <!-- Agrega más columnas para más atributos del producto -->
-                </tr>
-            </block>
+            </thead>
+            <tbody id="productosTable">
+            </tbody>
         </table>
     </div>
 </div>
 
-<!-- Script para cargar el encabezado -->
+<script src="/js/app.js"></script>
 <script>
-    window.onload = function() {
-        var headerContainer = document.getElementById("header");
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                headerContainer.innerHTML = this.responseText;
-            }
-        };
-        xhttp.open("GET", "/pages/header.html", true);
-        xhttp.send();
-    };
-</script>
+    //Muestra la lista de productos de cada proveedor:
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('productoForm');
+        const proveedorInput = document.getElementById('proveedor');
+        const proveedorNombre = document.getElementById('proveedorNombre');
+        const productosTable = document.getElementById('productosTable');
 
+        // Cargar datos del proveedor
+        fetch('/api/productos/proveedor')
+            .then(response => response.json())
+            .then(data => {
+                if (data) {
+                    proveedorNombre.textContent = data.nombre;
+                    proveedorInput.value = data.identificacion;
+
+                    // Cargar lista de productos
+                    fetch(`/api/productos/listar?proveedorId=${data.identificacion}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            productosTable.innerHTML = '';  // Limpiar contenido previo
+                            data.forEach(producto => {
+                                const row = document.createElement('tr');
+                                const nombreCell = document.createElement('td');
+                                const precioCell = document.createElement('td');
+
+                                nombreCell.textContent = producto.nombre;
+                                precioCell.textContent = producto.precio;
+
+                                row.appendChild(nombreCell);
+                                row.appendChild(precioCell);
+
+                                productosTable.appendChild(row);
+                            });
+                        })
+                        .catch(error => console.error('Error al cargar productos:', error));
+                }
+            });
+
+        // Manejar el envío del formulario
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(form);
+            const producto = {};
+            formData.forEach((value, key) => producto[key] = value);
+
+            fetch('/api/productos/agregar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(producto)
+            })
+                .then(response => response.text())
+                .then(data => {
+                    alert(data);
+                    location.reload();
+                })
+                .catch(error => console.error('Error al agregar producto:', error));
+        });
+    });
+</script>
 </body>
 </html>
-
-
 

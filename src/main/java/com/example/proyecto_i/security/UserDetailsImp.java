@@ -8,14 +8,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 public class UserDetailsImp implements UserDetails {
 
-    private Usuario user;
+    private final Usuario user;
 
-    public UserDetailsImp(Optional<Usuario> user) {
-        user.ifPresent(usuario -> this.user = usuario);
+    public UserDetailsImp(Usuario usuario) {
+        this.user = usuario;
     }
 
     public Usuario getUser() {
@@ -58,5 +57,4 @@ public class UserDetailsImp implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
 }

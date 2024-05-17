@@ -1,0 +1,49 @@
+/* Estilos generales del menú */
+.menu-container {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.menu-container .logo {
+    /* Estilos para el logo si es necesario */
+}
+
+.menu-container .Menu {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu-container .Menu li {
+    display: inline;
+    margin-right: 10px;
+}
+
+.menu-container .Menu li a {
+    text-decoration: none;
+    color: #333;
+    padding: 5px 10px;
+}
+
+.menu-container .Menu li a:hover {
+    background-color: #ddd;
+    border-radius: 5px;
+}
+
+.menu-container .user {
+    float: right;
+}
+
+/* Estilos específicos para los enlaces de login y logout */
+#loginlink,
+#logoutlink {
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 5px;
+}
+
+#loginlink a,
+#logoutlink a {
+    color: #fff;
+}

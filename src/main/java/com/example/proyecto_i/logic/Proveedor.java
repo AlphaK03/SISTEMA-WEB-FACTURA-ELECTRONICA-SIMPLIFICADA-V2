@@ -1,5 +1,8 @@
 package com.example.proyecto_i.logic;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.util.Collection;
@@ -23,6 +26,7 @@ public class Proveedor {
     @OneToMany(mappedBy = "proveedorByProveedor")
     private Collection<Factura> facturasByIdentificacion;
     @OneToMany(mappedBy = "proveedorByProveedor")
+    @JsonIgnore
     private Collection<Producto> productosByIdentificacion;
 
     public String getIdentificacion() {
@@ -97,7 +101,7 @@ public class Proveedor {
     public void setFacturasByIdentificacion(Collection<Factura> facturasByIdentificacion) {
         this.facturasByIdentificacion = facturasByIdentificacion;
     }
-
+   
     public Collection<Producto> getProductosByIdentificacion() {
         return productosByIdentificacion;
     }

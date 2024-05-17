@@ -1,5 +1,8 @@
 package com.example.proyecto_i.logic;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.Collection;
@@ -18,6 +21,7 @@ public class Producto {
     @OneToMany(mappedBy = "productoByCodigoproducto")
     private Collection<Detalle> detallesByCodigo;
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "proveedor", referencedColumnName = "identificacion", nullable = false)
     private Proveedor proveedorByProveedor;
 
