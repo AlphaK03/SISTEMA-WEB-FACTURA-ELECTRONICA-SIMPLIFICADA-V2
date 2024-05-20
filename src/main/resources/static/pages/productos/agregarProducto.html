@@ -5,11 +5,16 @@
     <title>Agregar Producto</title>
     <link rel="stylesheet" href="/css/agregarProducto.css">
     <link rel="stylesheet" href="/css/menu.css">
+    <script src="/js/app.js"></script>
 </head>
 <body>
-
 <div id="menu" class="menu-container"></div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        menu();
+    });
+</script>
 
 <h2>Agregar Producto</h2>
 <div class="container">
@@ -44,7 +49,6 @@
     </div>
 </div>
 
-<script src="/js/app.js"></script>
 <script>
     //Muestra la lista de productos de cada proveedor:
     document.addEventListener('DOMContentLoaded', function() {
@@ -54,7 +58,7 @@
         const productosTable = document.getElementById('productosTable');
 
         // Cargar datos del proveedor
-        fetch('/api/productos/proveedor')
+        fetch(`/api/productos/proveedor?username=${loginstate.usuario.identificacion}`)
             .then(response => response.json())
             .then(data => {
                 if (data) {
@@ -109,4 +113,3 @@
 </script>
 </body>
 </html>
-

@@ -2,28 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Registro</title>
-
-
-  <link rel="stylesheet" href="@{/show.css}">
+  <link rel="stylesheet" href="/css/show.css">
 </head>
 <body>
-
-
-<h2>Registrarse</h2>
-<form action="/registro" method="post">
-  <label for="identificacion">Identificación:</label><br>
-  <input type="text" id="identificacion" name="identificacion"><br>
-  <label for="nombre">Nombre:</label><br>
-  <input type="text" id="nombre" name="nombre"><br>
-  <label for="telefono">Teléfono:</label><br>
-  <input type="text" id="telefono" name="telefono"><br>
-  <label for="correo">Correo electrónico:</label><br>
-  <input type="email" id="correo" name="correo"><br>
-  <label for="contrasena">Contraseña:</label><br>
-  <input type="password" id="contrasena" name="contrasena"><br><br>
-  <input type="submit" value="Registrarse">
-</form>
+<div id="register-container"></div>
+<script src="/pages/registro/controller.js"></script>
 </body>
 </html>
 

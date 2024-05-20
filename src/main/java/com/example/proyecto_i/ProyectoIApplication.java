@@ -21,8 +21,19 @@ public class ProyectoIApplication {
 		var chain = http
 				.authorizeHttpRequests(customizer -> customizer
 						.requestMatchers("/api/login/login").permitAll()
-						.requestMatchers("/api/login/logout").authenticated()
-						.requestMatchers("/api/**").hasAnyAuthority("ADM","PRO")
+						.requestMatchers("/api/login/logout").permitAll()
+						.requestMatchers("/api/login/current-user").permitAll()
+						.requestMatchers("/api/productos/proveedor").permitAll()
+						.requestMatchers("/api/registro/registro").permitAll()
+						.requestMatchers("/api/registro/registroExitoso").permitAll()
+						.requestMatchers("/api/productos/agregar").permitAll()
+						.requestMatchers("/api/login/current-user").authenticated()
+						.requestMatchers("/api/user/details").permitAll()
+						.requestMatchers("/api/user/details").authenticated()
+						.requestMatchers("/api/productos/agregar").authenticated()
+						.requestMatchers("/api/productos/listar").permitAll()
+						.requestMatchers("/api/productos/proveedor").hasAnyAuthority("ADM", "PRO")
+						.requestMatchers("/api/**").authenticated()
 						.requestMatchers("/**").permitAll()
 				)
 				.exceptionHandling(customizer -> customizer
@@ -31,5 +42,7 @@ public class ProyectoIApplication {
 				.build();
 		return chain;
 	}
+
+
 
 }

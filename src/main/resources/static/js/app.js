@@ -3,22 +3,24 @@ var api_login = backend + '/login';
 
 var loginstate = {
     logged: false,
-    usuario: { identificacion: "", role: "" }
+    usuario: { identificacion: "", rol: "" }
 };
 
+
+
 async function checkuser() {
-    let request = new Request(api_login + '/current-user', { method: 'GET' });
+    let request = new Request(api_login + '/current-user', { method: 'GET', credentials: 'include' });
     const response = await fetch(request);
     if (response.ok) {
         loginstate.logged = true;
         loginstate.usuario = await response.json();
 
         // Obtener detalles del usuario
-        let detailsRequest = new Request(backend + '/user/details', { method: 'GET' });
+        let detailsRequest = new Request(backend + '/user/details', { method: 'GET', credentials: 'include' });
         const detailsResponse = await fetch(detailsRequest);
         if (detailsResponse.ok) {
             let userDetails = await detailsResponse.json();
-            loginstate.usuario.role = userDetails.role;
+            loginstate.usuario.rol = userDetails.role;
         } else {
             loginstate.logged = false;
         }
@@ -27,8 +29,9 @@ async function checkuser() {
     }
 }
 
+
 async function menu() {
-    await checkuser();
+    loadLoginState();
     if (!loginstate.logged && document.location.pathname != "/pages/login/show.html") {
         document.location = "/pages/login/show.html";
         throw new Error("Usuario no autorizado");
@@ -59,17 +62,14 @@ function render_menu() {
             <div>
                 <ul class="Menu">
                     <li id="logoutlink"><a href="#"> Logout</a></li>
-                    ${loginstate.usuario.role.includes('PRO') ? `
+                    ${loginstate.usuario.rol.includes('PRO') ? `
                         <li id="facturarLink"><a href="#">Facturar</a></li>
                         <li id="clientesLink"><a href="#">Clientes</a></li>
-                        
-                        <!-- Aqui debe resolverse este inconveniente con el link de Productos el cual lleva el ID del Proveedor -->
                         <li id="productosLink"><a href="#">Productos</a></li>
-                       
                         <li id="facturasLink"><a href="#">Facturas</a></li>
                         <li id="perfilLink"><a href="#">Perfil</a></li>
                     ` : ''}
-                    ${loginstate.usuario.role.includes('ADM') ? `
+                    ${loginstate.usuario.rol.includes('ADM') ? `
                         <li id="administrarLink"><a href="/pages/otros/administrador.html#">Administrar</a></li>
                     ` : ''}
                 </ul>
@@ -90,15 +90,12 @@ function render_menu() {
         document.querySelector("#menu #facturasLink").addEventListener('click', e => {
             document.location = "/pages/facturar/showFacturar.html";
         });
-
         document.querySelector("#menu #perfilLink").addEventListener('click', e => {
             document.location = "/pages/otros/perfil.html";
         });
-
         document.querySelector("#menu #administrarLink").addEventListener('click', e => {
             document.location = "/pages/otros/administrador.html";
         });
-
     }
 }
 
@@ -172,7 +169,13 @@ async function login() {
         errorMessage(response.status);
         return;
     }
-    document.location = "/pages/login/show.html";
+
+    // Guardar el estado de login en localStorage
+    loginstate.logged = true;
+    loginstate.usuario = await response.json();
+    localStorage.setItem('loginstate', JSON.stringify(loginstate));
+
+    document.location = "/pages/productos/agregarProducto.html";
 }
 
 async function logout(event) {
@@ -183,6 +186,10 @@ async function logout(event) {
         errorMessage(response.status);
         return;
     }
+
+    // Limpiar el estado de login de localStorage
+    localStorage.removeItem('loginstate');
+
     document.location = "/pages/login/show.html";
 }
 
@@ -190,9 +197,13 @@ function errorMessage(status) {
     alert("Error: " + status);
 }
 
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadLoginState();
+});
 document.addEventListener('DOMContentLoaded', menu);
 
-window.onload = function() {
+/*window.onload = function() {
     var headerContainer = document.getElementById("header");
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -203,9 +214,6 @@ window.onload = function() {
     xhttp.open("GET", "/pages/header.html", true);
     xhttp.send();
 };
-
-
-
 
 document.addEventListener("DOMContentLoaded", function() {
     const form = document.getElementById("producto-form");
@@ -238,5 +246,17 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 });
+*/
 
 
+
+
+
+
+//--------------REGISTRO
+function loadLoginState() {
+    let savedState = localStorage.getItem('loginstate');
+    if (savedState) {
+        loginstate = JSON.parse(savedState);
+    }
+}

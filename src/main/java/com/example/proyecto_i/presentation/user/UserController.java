@@ -1,5 +1,7 @@
 package com.example.proyecto_i.presentation.user;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +14,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/user")
 public class UserController {
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
     @GetMapping("/details")
     public UserDetailsDTO getUserDetails(Authentication authentication) {
         if (authentication != null) {

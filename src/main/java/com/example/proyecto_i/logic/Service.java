@@ -201,9 +201,11 @@ public class Service {
 //        }
         return facturaActualizada;
     }
-
-
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     public void registrar(Proveedor administrador, Usuario user) {
+        String contrasenaEncriptada = passwordEncoder.encode(user.getContrasena());
+        user.setContrasena(contrasenaEncriptada);
         proveedorRepository.save(administrador);
         usuarioRepository.save(user);
     }

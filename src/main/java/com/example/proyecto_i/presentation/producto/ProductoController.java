@@ -5,8 +5,10 @@ import com.example.proyecto_i.logic.ProductoSimpleDTO;
 import com.example.proyecto_i.logic.Proveedor;
 import com.example.proyecto_i.logic.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +22,9 @@ public class ProductoController {
 
     @PostMapping("/agregar")
     public String registrarProducto(@RequestBody Producto producto, Authentication authentication) {
+        if (authentication == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No user authenticated");
+        }
         try {
             String username = authentication.getName();
             Optional<Proveedor> proveedorOpt = service.proveedorRead(username);
@@ -43,6 +48,9 @@ public class ProductoController {
 
     @GetMapping("/proveedor")
     public Proveedor obtenerProveedor(Authentication authentication) {
+        if (authentication == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No user authenticated");
+        }
         String username = authentication.getName();
         return service.proveedorRead(username).orElse(null);
     }

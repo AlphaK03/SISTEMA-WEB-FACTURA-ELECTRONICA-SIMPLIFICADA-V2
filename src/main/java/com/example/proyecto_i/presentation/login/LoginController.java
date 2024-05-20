@@ -1,6 +1,5 @@
 package com.example.proyecto_i.presentation.login;
 
-import com.example.proyecto_i.logic.Service;
 import com.example.proyecto_i.logic.Usuario;
 import com.example.proyecto_i.security.UserDetailsImp;
 import jakarta.servlet.ServletException;
@@ -20,66 +19,36 @@ import org.springframework.web.server.ResponseStatusException;
 public class LoginController {
 
     @Autowired
-    private Service service;
-
-    @Autowired
     private AuthenticationManager authenticationManager;
 
+    private UserDetailsImp userDetails;
+
     @PostMapping("/login")
-    public Usuario login(@RequestBody Usuario form, HttpServletRequest request) {
+    public Usuario login(@RequestBody Usuario form,  HttpServletRequest request) {
         try {
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(form.getIdentificacion(), form.getContrasena());
-            Authentication auth = authenticationManager.authenticate(authToken);
-            SecurityContextHolder.getContext().setAuthentication(auth);
-            Usuario usuario = (Usuario) auth.getPrincipal();
-            return new Usuario(usuario.getIdentificacion(), null, usuario.getRol());
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Login failed", e);
+            request.login(form.getIdentificacion(), form.getContrasena());
+        } catch (ServletException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
+        Authentication auth = (Authentication) request.getUserPrincipal();
+        Usuario user = ((UserDetailsImp) auth.getPrincipal()).getUser();
+        return new Usuario(user.getIdentificacion(), null, user.getRol());
     }
 
     @PostMapping("/logout")
     public void logout(HttpServletRequest request) {
         try {
             request.logout();
-        } catch (ServletException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Logout failed");
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Logout failed", e);
         }
     }
 
     @GetMapping("/current-user")
     public Usuario getCurrentUser(@AuthenticationPrincipal UserDetailsImp user) {
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Usuario no autenticado");
+        }
         return new Usuario(user.getUser().getIdentificacion(), null, user.getUser().getRol());
-    }
-
-    @GetMapping("/registro")
-    public String showRegisterPage() {
-        return "pages/registro/registrar"; // Devuelve el nombre de la vista del registro
-    }
-}
-
-class UserDetailsDTO {
-    private String username;
-    private String role;
-
-    public UserDetailsDTO(String username, String role) {
-        this.username = username;
-        this.role = role;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 }
