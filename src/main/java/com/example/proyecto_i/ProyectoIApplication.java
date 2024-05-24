@@ -23,6 +23,8 @@ public class ProyectoIApplication {
 						.requestMatchers("/api/login/login").permitAll()
 						.requestMatchers("/api/login/logout").permitAll()
 						.requestMatchers("/api/login/current-user").permitAll()
+						.requestMatchers("/api/clientes/crearCliente").permitAll()
+						.requestMatchers("/api/clientes/listar").permitAll()
 						.requestMatchers("/api/productos/proveedor").permitAll()
 						.requestMatchers("/api/registro/registro").permitAll()
 						.requestMatchers("/api/registro/registroExitoso").permitAll()

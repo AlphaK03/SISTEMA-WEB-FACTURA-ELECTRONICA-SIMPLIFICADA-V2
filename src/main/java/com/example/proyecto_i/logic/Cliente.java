@@ -1,5 +1,6 @@
 package com.example.proyecto_i.logic;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.Collection;
@@ -19,8 +20,10 @@ public class Cliente {
     @Column(name = "correo")
     private String correo;
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "proveedor", referencedColumnName = "identificacion", nullable = false)
     private Proveedor proveedorByProveedor;
+    @JsonIgnore
     @OneToMany(mappedBy = "clienteByCliente")
     private Collection<Factura> facturasByIdentificacion;
 

@@ -54,7 +54,6 @@ public class Service {
     }
 
 
-
     //------------------PROVEEDOR----------------
     public void proveedorCreate (Proveedor prov) throws  Exception{
         proveedorRepository.save(prov);
@@ -127,6 +126,13 @@ public class Service {
     public Cliente clientesSearch(String id) throws Exception {
         return clientesRepository.findById(id).orElse(null);
     }
+    public List<ClienteSimpleDTO> clientesByProveedor(String idProveedor) {
+        List<Cliente> clientes = clientesRepository.findByProveedorByProveedorIdentificacion(idProveedor);
+        return clientes.stream()
+                .map(cliente -> new ClienteSimpleDTO(cliente.getIdentificacion(), cliente.getNombre(), cliente.getTelefono(), cliente.getCorreo()))
+                .collect(Collectors.toList());
+    }
+
 
     public void clientesDelete(String id) throws Exception {
         clientesRepository.deleteById(id);
