@@ -116,11 +116,6 @@ public class FacturaController {
         return "redirect:/crearFactura";
     }
 
-    @GetMapping("/facturaProducto")
-    public String facturaProducto(Model model, @ModelAttribute("producto") Producto producto, @ModelAttribute("factura") Factura factura, HttpSession session) {
-        return "redirect:/crearFactura";
-    }
-
 
     @PostMapping("/facturaProducto")
     public String facturaProducto(Model model, HttpSession session, @RequestParam String codigo, @ModelAttribute("producto") Producto producto, @ModelAttribute("clienteSearch") Cliente cliente, @ModelAttribute("proveedor") Proveedor proveedor, @ModelAttribute("factura") Factura factura) throws Exception {
@@ -167,16 +162,6 @@ public class FacturaController {
             model.addAttribute("mensaje", "Producto no encontrado");
             return "redirect:/crearFactura";
         }
-    }
-    @PostMapping ("/sumaDetalle")
-    public String sumaDetalle(Model model, @ModelAttribute("factura") Factura f, @ModelAttribute("detalles") List<Detalle> detalles){
-
-        return "redirect:/crearFactura";
-    }
-    @PostMapping ("/restaDetalle")
-    public String restaDetalle(Model model, @ModelAttribute("factura") Factura f, @ModelAttribute("detalles") List<Detalle> detalles){
-
-        return "redirect:/crearFactura";
     }
 
     @PostMapping("/facturaFinal")
@@ -285,6 +270,29 @@ public class FacturaController {
                     return Optional.of(cliente);
                 } else {
                     throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado");
+                }
+            } else {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Proveedor no encontrado");
+            }
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error interno del servidor");
+        }
+    }
+    @GetMapping("/searchProducto")
+    public Optional<Producto> agregarProducto(@RequestParam String nombreProducto, Authentication authentication){
+        if (authentication == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No user authenticated");
+        }
+        try {
+            String username = authentication.getName();
+            Optional<Proveedor> proveedorOpt = service.proveedorRead(username);
+            if (proveedorOpt.isPresent()) {
+                Proveedor proveedor = proveedorOpt.get();
+                Producto producto = service.productoByProveedor(proveedor.getIdentificacion(),nombreProducto);
+                if (producto != null) {
+                    return Optional.of(producto);
+                } else {
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Producto no encontrado");
                 }
             } else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Proveedor no encontrado");

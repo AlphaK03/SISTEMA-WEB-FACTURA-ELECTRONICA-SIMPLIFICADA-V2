@@ -5,13 +5,13 @@ public class DetalleSimpleDTO {
     private int numero;
     private String descripcion;
     private int cantidad;
-    private String codigoPorducto;
+    private String codigoProducto;
 
-    public DetalleSimpleDTO (int numero, String descripcion, int cantidad, String codigoPorducto){
+    public DetalleSimpleDTO (int numero, String descripcion, int cantidad, String codigoProducto){
         this.numero=numero;
         this.descripcion = descripcion;
         this.cantidad=cantidad;
-        this.codigoPorducto=codigoPorducto;
+        this.codigoProducto=codigoProducto;
     }
 
     public int getNumero() {
@@ -22,8 +22,8 @@ public class DetalleSimpleDTO {
         return descripcion;
     }
 
-    public String getCodigoPorducto() {
-        return codigoPorducto;
+    public String getCodigoProducto() {
+        return codigoProducto;
     }
 
     public int getCantidad() {

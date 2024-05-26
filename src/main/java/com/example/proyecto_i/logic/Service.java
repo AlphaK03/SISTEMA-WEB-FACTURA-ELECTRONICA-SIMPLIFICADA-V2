@@ -102,9 +102,8 @@ public class Service {
 
         return filtradosPorProveedor;
     }
-    public Optional<Producto> productosSearch(Proveedor prov, String cod)  throws Exception{
-        /*Flitrar los productos según el proveedor*/
-        return productosRepository.findById(cod);
+    public Producto productoByProveedor(String idProveedor, String nombreProducto)  throws Exception{
+        return productosRepository.findProductoByProveedor(idProveedor,nombreProducto);
     }
     public void productosDelete (String id)  throws Exception{
         productosRepository.deleteById(id);
