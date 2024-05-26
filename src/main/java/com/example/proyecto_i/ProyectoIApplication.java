@@ -20,20 +20,32 @@ public class ProyectoIApplication {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		var chain = http
 				.authorizeHttpRequests(customizer -> customizer
+						//Usuario
+						.requestMatchers("/api/user/details").permitAll()
+						.requestMatchers("/api/user/details").authenticated()
+						//Login
 						.requestMatchers("/api/login/login").permitAll()
 						.requestMatchers("/api/login/logout").permitAll()
 						.requestMatchers("/api/login/current-user").permitAll()
-						.requestMatchers("/api/clientes/crearCliente").permitAll()
-						.requestMatchers("/api/clientes/listar").permitAll()
-						.requestMatchers("/api/productos/proveedor").permitAll()
+						.requestMatchers("/api/login/current-user").authenticated()
+						//Registro
 						.requestMatchers("/api/registro/registro").permitAll()
 						.requestMatchers("/api/registro/registroExitoso").permitAll()
+						//Clientes
+						.requestMatchers("/api/clientes/crearCliente").permitAll()
+						.requestMatchers("/api/clientes/listar").permitAll()
+						//Productos
+						.requestMatchers("/api/productos/proveedor").permitAll()
 						.requestMatchers("/api/productos/agregar").permitAll()
-						.requestMatchers("/api/login/current-user").authenticated()
-						.requestMatchers("/api/user/details").permitAll()
-						.requestMatchers("/api/user/details").authenticated()
 						.requestMatchers("/api/productos/agregar").authenticated()
 						.requestMatchers("/api/productos/listar").permitAll()
+						//Facturas
+						.requestMatchers("/api/facturas/crearFactura").permitAll()
+						.requestMatchers("/api/facturas/searchCliente").permitAll()
+						.requestMatchers("/api/facturas/listar").permitAll()
+						.requestMatchers("/api/facturas/listar-facturas").permitAll()
+						.requestMatchers("/api/facturas/proveedorID").permitAll()
+						//?
 						.requestMatchers("/api/productos/proveedor").hasAnyAuthority("ADM", "PRO")
 						.requestMatchers("/api/**").authenticated()
 						.requestMatchers("/**").permitAll()

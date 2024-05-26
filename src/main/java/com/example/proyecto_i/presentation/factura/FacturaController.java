@@ -9,90 +9,55 @@ import com.itextpdf.layout.element.Paragraph;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+
 @RestController
 @RequestMapping("/api/facturas")
-@SessionAttributes({"facturas","clienteSearch","proveedor", "productoSearch", "producto"})
 public class FacturaController {
     @Autowired
     private Service service;
 
-    @ModelAttribute("facturas")
-    public List<Factura> facturas() {
-        return new ArrayList<Factura>();
-    }
-
-    @ModelAttribute("clienteSearch")
-    public Cliente clienteSearch() {
-        Cliente cliente = new Cliente();
-        cliente.setNombre("...");
-        return cliente;
-    }
-
-    @ModelAttribute("productoSearch")
-    public Producto productoSearch() {
-        return new Producto();
-    }
-
-  /*
-  *   @ModelAttribute("proveedor")
-    public Proveedor proveedor(HttpSession session) {
-        Usuario usuario = (Usuario) session.getAttribute("usuario");
-        Optional<Proveedor> prov = service.proveedorRead(usuario.getIdentificacion());
-        Proveedor proveedor = new Proveedor();
-        if (prov.isPresent()) {
-            proveedor = prov.get();
-        }
-        return proveedor;
-    }*/
-
-    @ModelAttribute("detalles")
-    public Iterable<Detalle> detalles() {
-        return new ArrayList<Detalle>();
-    }
-
-    @ModelAttribute("detalle")
-    public Detalle detalle() {
-        return new Detalle();
-    }
-
-    @ModelAttribute("factura")
-    public Factura factura() {
-        return new Factura();
-    }
-
-    @ModelAttribute("producto")
-    public Producto producto() {
-        return new Producto();
-    }
-
     @GetMapping("/crearFactura")
-    public String crearFactura(@ModelAttribute("clienteSearch") Cliente cliente, @ModelAttribute("proveedor") Proveedor proveedor, Model model, HttpSession session, @ModelAttribute("factura") Factura factura) {
-        try {
-
-            List<Detalle> detalles = (List<Detalle>) session.getAttribute("facturaDetalles");
-
-            model.addAttribute("detalles", detalles);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            model.addAttribute("mensaje", "Hubo un error al crear una factura. Por favor, inténtalo de nuevo.");
+    public ResponseEntity<Map<String, Object>> crearFactura(@RequestBody Factura factura, Authentication authentication) {
+        Map<String, Object> response = new HashMap<>();
+        if (authentication == null) {
+            response.put("success", false);
+            response.put("message", "No user authenticated");
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
-
-        return "pages/facturar/crearFactura";
+        try {
+            String username = authentication.getName();
+            Optional<Proveedor> proveedorOpt = service.proveedorRead(username);
+            if (proveedorOpt.isPresent()) {
+                Proveedor proveedor = proveedorOpt.get();
+                factura.setProveedorByProveedor(proveedor);
+                service.facturasCreate(factura);
+                response.put("success", true);
+                response.put("message", "Factura agregada exitosamente");
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            } else {
+                response.put("success", false);
+                response.put("message", "Factura no encontrado");
+                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Error al agregar factura");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 
-
+/*
     @GetMapping("/presentation/facturar/showFacturar")
     public String search(Model model, HttpSession session, @ModelAttribute("proveedor") Proveedor proveedor, @ModelAttribute("facturas") List<Factura> facturas) {
         try {
@@ -203,36 +168,6 @@ public class FacturaController {
             return "redirect:/crearFactura";
         }
     }
-
-
-
-
-    @PostMapping("/facturaCliente")
-    public String facturaCliente(Model model, HttpSession session, @RequestParam String identificacion, @ModelAttribute("factura") Factura factura) throws Exception {
-        Factura facturaNueva = new Factura();
-        Cliente addCliente = service.clientesSearch(identificacion);
-        Usuario usuario = (Usuario) session.getAttribute("usuario");
-        List<Detalle> detalles = (List<Detalle>) session.getAttribute("detalles");
-        try{
-            Optional<Proveedor> proveedor = service.proveedorRead(usuario.getIdentificacion());
-            if(proveedor.isPresent() && addCliente != null){
-                facturaNueva.setClienteByCliente(addCliente);
-                facturaNueva.setProveedorByProveedor((Proveedor) model.getAttribute("proveedor"));
-                model.addAttribute("clienteSearch", addCliente);
-                model.addAttribute("factura", facturaNueva);
-            }
-            return "redirect:/crearFactura";
-        }catch (Exception e) {
-            e.printStackTrace();
-            model.addAttribute("mensaje", "Hubo un error al crear una factura. Por favor, inténtalo de nuevo.");
-        }
-        return "redirect:/crearFactura";
-    }
-    @PostMapping ("/deleteDetalle")
-    public String deleteDetalle(Model model, @ModelAttribute("factura") Factura f, @ModelAttribute("detalles") List<Detalle> detalles){
-
-        return "redirect:/crearFactura";
-    }
     @PostMapping ("/sumaDetalle")
     public String sumaDetalle(Model model, @ModelAttribute("factura") Factura f, @ModelAttribute("detalles") List<Detalle> detalles){
 
@@ -290,20 +225,73 @@ public class FacturaController {
             model.addAttribute("mensaje", "Hubo un error al crear una factura. Por favor, inténtalo de nuevo.");
             return "pages/error";
         }
-    }
+    }*/
 
 
 
     //ACTUALIZACIÓN-----------------------
 
     @GetMapping("/proveedorID")
-    public Proveedor obtenerProveedorID(Authentication authentication) {
-        String username = authentication.getName();
-        return service.proveedorRead(username).orElse(null);
+    public Proveedor obtenerProveedor(Authentication authentication) {
+        if (authentication == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No user authenticated");
+        }
+        try {
+            String username = authentication.getName();
+            Optional<Proveedor> proveedorOpt = service.proveedorRead(username);
+            if (proveedorOpt.isPresent()) {
+                return proveedorOpt.get();
+            } else {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Proveedor no encontrado");
+            }
+        }catch(Exception e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Proveedor no encontrado");
+        }
     }
     @GetMapping("/listar-facturas")
     public List<FacturaSimpleDTO> listarFacturasPorProveedor(Authentication authentication) {
         return service.facturasByProveedor(authentication.getName());
+    }
+    @GetMapping("/listar")
+    public List<FacturaSimpleDTO> listarFacturas(Authentication authentication) throws Exception {
+        if (authentication == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No user authenticated");
+        }
+        try {
+            String username = authentication.getName();
+            Optional<Proveedor> proveedorOpt = service.proveedorRead(username);
+            if (proveedorOpt.isPresent()) {
+                Proveedor proveedor = proveedorOpt.get();
+                return service.facturasByProveedor(proveedor.getIdentificacion());
+            } else {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Proveedor no encontrado");
+            }
+        }catch(Exception e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Proveedor no encontrado");
+        }
+    }
+    @GetMapping("/searchCliente")
+    public Optional<Cliente> searchCliente(@RequestParam String identificacionCliente, Authentication authentication) {
+        if (authentication == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No user authenticated");
+        }
+        try {
+            String username = authentication.getName();
+            Optional<Proveedor> proveedorOpt = service.proveedorRead(username);
+            if (proveedorOpt.isPresent()) {
+                Proveedor proveedor = proveedorOpt.get();
+                Cliente cliente = service.findClienteByProveedor(proveedor.getIdentificacion(), identificacionCliente);
+                if (cliente != null) {
+                    return Optional.of(cliente);
+                } else {
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado");
+                }
+            } else {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Proveedor no encontrado");
+            }
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error interno del servidor");
+        }
     }
 
 }

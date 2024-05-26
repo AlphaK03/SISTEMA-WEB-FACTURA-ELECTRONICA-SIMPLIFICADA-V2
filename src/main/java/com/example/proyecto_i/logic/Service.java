@@ -8,11 +8,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.example.proyecto_i.data.ProveedorRepository;
-import com.example.proyecto_i.security.UserDetailsImp;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @org.springframework.stereotype.Service("service")
@@ -133,7 +129,9 @@ public class Service {
                 .collect(Collectors.toList());
     }
 
-
+    public Cliente findClienteByProveedor(String idProveedor, String idCliente){
+        return clientesRepository.findClienteByProveedor(idProveedor, idCliente);
+    }
     public void clientesDelete(String id) throws Exception {
         clientesRepository.deleteById(id);
     }
@@ -224,6 +222,9 @@ public class Service {
     public Optional<Proveedor> proveedorRead(String identification) {
 
         return proveedorRepository.findById(identification);
+    }
+    public Optional<Cliente> clienteRead(String identificacion){
+        return clientesRepository.findById(identificacion);
     }
 
     public List<Proveedor> proveedorGetAll() {

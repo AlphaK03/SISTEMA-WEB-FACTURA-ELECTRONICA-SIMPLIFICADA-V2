@@ -19,4 +19,7 @@ public interface ClientesRepository extends CrudRepository <Cliente, String>{
     @Query("select c from Cliente c where c.proveedorByProveedor = ?1 and c.identificacion =?2")
     List<Cliente> findByProveedorAndIdentificacion(String idProveedor, String identificacionCliente);
 
+    @Query("select c from Cliente c where c.proveedorByProveedor.id = ?1 and c.identificacion = ?2")
+    Cliente findClienteByProveedor(String idProveedor, String idCliente);
+
 }

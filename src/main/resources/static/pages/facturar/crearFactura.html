@@ -5,37 +5,14 @@
     <title>Crear factura</title>
     <link rel="stylesheet" href="/css/crearFactura.css">
     <link rel="stylesheet" href="/css/menu.css">
+    <script src="controller.js"></script>
 </head>
 <body>
 <div id="menu" class="menu-container"></div>
 
 <div class="container">
-    <div class="form-container">
-        <div class="section">
-            <h4>Proveedor:</h4>
-            <label text="${proveedor.nombre}"></label>
-        </div>
+    <div id = search-container class="form-container">
 
-        <div class="section search">
-            <h4>Buscar Cliente:</h4>
-            <h4>Cliente:</h4>
-            <label text="${clienteSearch.getNombre()}"></label><br>
-            <form action="/facturaCliente" method="post">
-                <input type="text" id = "identificacion" name="identificacion" placeholder="Ingrese el nombre del cliente">
-                <button type="submit">Buscar</button>
-            </form>
-        </div>
-
-        <div class="section search">
-            <h4>Buscar Producto:</h4>
-            <td text="${factura.setDetallesByNumero(detalles)}"></td>
-
-            <label text="${producto.getNombre()}"></label><br>
-            <form action="/facturaProducto" method="post">
-                <input type="text" id = "codigo" name = "codigo" placeholder="Ingrese el nombre del producto">
-                <button type="submit">Buscar</button>
-            </form>
-        </div>
     </div>
 
     <div class="product-list">

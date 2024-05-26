@@ -1,16 +1,10 @@
-document.addEventListener("DOMContentLoaded", loaded);
+document.addEventListener("DOMContentLoaded", async function () {
+    render_client_register();
+    await load_client_list();
+});
 
-async function loaded(event) {
-    try {
-        render_combined_content();
-        await load_client_list();  // Cargar la lista de clientes al iniciar la página
-    } catch (error) {
-        console.error('Error:', error);
-    }
-}
-
-function render_combined_content() {
-    const container = document.querySelector('#combined-container');
+function render_client_register() {
+    const container = document.querySelector('#form-container');
     container.innerHTML = '';  // Limpiar contenido previo
 
     let registerHtml = `
@@ -30,6 +24,11 @@ function render_combined_content() {
     `;
     container.insertAdjacentHTML('beforeend', registerHtml);
     document.querySelector('#clientRegisterForm').addEventListener('submit', client_register);
+}
+
+function render_client_list() {
+    const container = document.querySelector('#list-container');
+    container.innerHTML = '';  // Limpiar contenido previo
 
     let listHtml = `
         <div class="product-list">
@@ -52,6 +51,8 @@ function render_combined_content() {
 }
 
 async function load_client_list() {
+    render_client_list();  // Renderizar la estructura vacía de la lista
+
     try {
         const response = await fetch('/api/clientes/listar');
         if (!response.ok) {
@@ -59,7 +60,7 @@ async function load_client_list() {
         }
         const data = await response.json();
         const clientesTable = document.getElementById('clientesTable');
-        clientesTable.innerHTML = '';  // Limpiar contenido previo
+        clientesTable.innerHTML = ''; // Limpiar contenido previo
 
         data.forEach(cliente => {
             const row = document.createElement('tr');
@@ -71,7 +72,6 @@ async function load_client_list() {
             `;
             clientesTable.appendChild(row);
         });
-        console.log("Lista de clientes cargada");
     } catch (error) {
         console.error('Error al cargar clientes:', error);
     }
@@ -79,14 +79,12 @@ async function load_client_list() {
 
 async function client_register(event) {
     event.preventDefault();
-    console.log("Creando cliente");
     let cliente = {
         identificacion: document.getElementById("identificacion").value,
         nombre: document.getElementById("nombre").value,
         telefono: document.getElementById("telefono").value,
         correo: document.getElementById("correo").value
     };
-    console.log("Valores del cliente:", cliente);
     let request = new Request('/api/clientes/crearCliente', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -95,15 +93,12 @@ async function client_register(event) {
 
     try {
         const response = await fetch(request);
-        const data = await response.json();
-        console.log("Response:", data);
-        if (response.ok && data.success) {
-            console.log("Sí se ingresó el cliente :)");
+        const data = await response.text(); // Ahora que devolvemos texto
+        if (response.ok) {
             document.getElementById('responseMessage').innerText = 'Registro exitoso';
-            await load_client_list();  // Recargar la lista de clientes
+            await load_client_list(); // Actualiza la lista después de registrar
         } else {
-            console.log("No se ingresó el cliente :(");
-            document.getElementById('responseMessage').innerText = 'Error en el registro: ' + (data.message || 'Desconocido');
+            document.getElementById('responseMessage').innerText = 'Error en el registro: ' + data;
         }
     } catch (error) {
         console.error('Error:', error);
