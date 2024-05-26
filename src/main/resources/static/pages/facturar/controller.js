@@ -3,8 +3,7 @@ document.addEventListener("DOMContentLoaded", loaded);
 var facturaState={
     lista_detalles: [],
     proveedor:{nombre:""},
-    cliente : {identificacion:"", nombre:"", telefono:"", correo:""},
-    producto:{codigo:""}
+    cliente : {identificacion:"", nombre:"", telefono:"", correo:""}
 }
 async function loaded(event) {
     try {
@@ -12,7 +11,6 @@ async function loaded(event) {
         render_cliente();
         render_producto();
         render_list();
-        load_detalles();
     } catch (error) {
         console.error('Error:', error);
     }
@@ -30,54 +28,43 @@ class Detalle{
     }
 }
 function agregarDetalle(numero, descripcion, cantidad, codigoProducto, precio) {
-    const detalle = new Detalle(numero, descripcion, cantidad, codigoProducto, precio, precio);
-    console.log("detalle");
+    const detalle = new Detalle(numero, descripcion, cantidad, codigoProducto, precio, precio * cantidad);
     facturaState.lista_detalles.push(detalle);
-    console.log("Detalle agregardo correctamente");
+    console.log("Detalle agregado correctamente");
+    load_detalles(); // Recargar la lista después de agregar un detalle
 }
-//MODIFICAR sólo cambia la cantidad por medio del botón
 function sumarDetalle(numero) {
-    if(facturaState.lista_detalles.length >0){
-        facturaState.lista_detalles.forEach(detalle => {
-            if ( detalle.numero === numero){
-                detalle.cantidad = detalle.cantidad + 1;
-                detalle.monto = detalle.precio * detalle.cantidad;
-            }
-        });
-    }else{
-        console.error("La lista de detalles está vacía");
-    }
+    facturaState.lista_detalles.forEach(detalle => {
+        if (detalle.numero === numero) {
+            detalle.cantidad += 1;
+            detalle.monto = detalle.precioProducto * detalle.cantidad;
+        }
+    });
+    load_detalles(); // Recargar la lista después de modificar un detalle
 }
+
 function restarDetalle(numero) {
-    if(facturaState.lista_detalles.length >0){
-        facturaState.lista_detalles.forEach(detalle => {
-            if ( detalle.numero === numero && detalle.cantidad > 1){
-                detalle.cantidad = detalle.cantidad - 1;
-                detalle.monto = detalle.precio * detalle.cantidad;
-            }
-        });
-    }else{
-        console.error("La lista de detalles está vacía o la cantidad es 1");
-    }
+    facturaState.lista_detalles.forEach(detalle => {
+        if (detalle.numero === numero && detalle.cantidad > 1) {
+            detalle.cantidad -= 1;
+            detalle.monto = detalle.precioProducto * detalle.cantidad;
+        }
+    });
+    load_detalles(); // Recargar la lista después de modificar un detalle
 }
-//ELIMINAR sólo por medio del botón
 function eliminarDetalle(numero) {
-    const indice = detalles.findIndex(det => det.numero === numero);
+    const indice = facturaState.lista_detalles.findIndex(det => det.numero === numero);
     if (indice !== -1) {
-        detalles.splice(indice, 1);
+        facturaState.lista_detalles.splice(indice, 1);
+        console.log(`Detalle con número ${numero} eliminado.`);
     } else {
         console.error(`Detalle con número ${numero} no encontrado.`);
     }
+    load_detalles(); // Recargar la lista después de eliminar un detalle
 }
 //Total de factura
-function totalFactura(){
-    var total=0;
-    if(facturaState.lista_detalles.length === 0) {
-        facturaState.lista_detalles.forEach(detalle => {
-            total += detalle.monto;
-        });
-    }
-    return total;
+function totalFactura() {
+    return facturaState.lista_detalles.reduce((total, detalle) => total + detalle.monto, 0);
 }
 
 //Renderización de html
@@ -133,30 +120,28 @@ function render_producto(){
 }
 
 //LISTA DE DETALLES (FACTURA)
-function render_list(){
+function render_list() {
     const lista = document.querySelector('#lista-productos');
-    let listaHTML=`
+    let listaHTML = `
         <h2>Lista de Detalles</h2>
         <table>
             <thead>
-            <tr>
-                <th>Eliminar</th>
-                <th>Cantidad</th>
-                <th>Descripción</th>
-                <th>Precio</th>
-                <th>Monto</th>
-                <th>Botones</th>
-            </tr>
+                <tr>
+                    <th>Eliminar</th>
+                    <th>Cantidad</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th>Monto</th>
+                    <th>Botones</th>
+                </tr>
             </thead>
-            <!-- ForEach de los detalles en el load--->
-            <tbody id = "detallesTable">
+            <tbody id="detallesTable">
             </tbody>
         </table>
-        <!-- Total (factura), llamar a util -->
-        <h4>Total: ... </h4>
-        <label id = total></label>
+        <h4>Total: <span id="total"></span></h4>
     `;
-    lista.insertAdjacentHTML('beforeend',listaHTML);
+    lista.innerHTML = listaHTML; // Usar innerHTML en lugar de insertAdjacentHTML
+    load_detalles(); // Cargar detalles iniciales
 }
 
 //CARGAR DATOS DESDE EL BACKEND
@@ -215,52 +200,64 @@ async function producto_search(event){
         const response = await fetch(request);
         const data = await response.json();
         console.log(data);
-        //Data aparece con error..?
         if (data.error) {
             console.error('Error al buscar el producto', data.error);
             document.getElementById('LABEL').innerText = `Error al buscar producto: ${data.error}`;
             return;
         }
         console.log(data);
-        agregarDetalle(1,data.nombre, 1,data.codigo, data.precio);
-        load_detalles();
+        agregarDetalle(facturaState.lista_detalles.length + 1, data.nombre, 1, data.codigo, data.precio);
     }catch(error){
         console.error('Error al buscar producto:', error);
         document.getElementById('LABEL').innerText = 'Error al buscar producto';
     }
 }
-function load_detalles(){
-    try{
+function load_detalles() {
+    try {
         const detallesTable = document.getElementById('detallesTable');
         detallesTable.innerHTML = ''; // Limpiar la lista anterior
-        facturaState.lista_detalles.forEach(detalle=>{
-            const row = document .createElement('tr');
+        facturaState.lista_detalles.forEach(detalle => {
+            const row = document.createElement('tr');
             row.innerHTML = `
-                <td><!-- Botón de eliminar -->
-                    <button id="eliminar"><img src="/images/equis.png" width="20px"/></button>
-                </td>
+                <td><button class="eliminar" data-numero="${detalle.numero}"><img src="/images/equis.png" width="20px"/></button></td>
                 <td>${detalle.cantidad}</td>
                 <td>${detalle.descripcion}</td>
                 <td>${detalle.precioProducto}</td>
                 <td>${detalle.monto}</td>
-                <!-- Botones de suma o resta de la cantidad -->
                 <td>
-                    <!-- Sumar  -->
-                    <button id="sumar"><img src="/images/suma.png" width="20px"/></button>
-                    <!-- Restar -->
-                    <button id="restar"><img src="/images/resta.png" width="20px"/></button>
+                    <button class="sumar" data-numero="${detalle.numero}"><img src="/images/suma.png" width="20px"/></button>
+                    <button class="restar" data-numero="${detalle.numero}"><img src="/images/resta.png" width="20px"/></button>
                 </td>
-           `;
-
-            //document.querySelector('#eliminar').addEventListener('click', eliminarDetalle(detalle.numero));
-            //document.querySelector('#sumar').addEventListener('click', sumarDetalle(detalle.numero));
-            //document.querySelector('#eliminar').addEventListener('click', restarDetalle(detalle.numero));
+            `;
             detallesTable.appendChild(row);
         });
-    }catch(error){
-        console.error('Error al cargar clientes:', error);
-    }
 
+        // Agregar event listeners para los botones
+        document.querySelectorAll('.eliminar').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const numero = parseInt(e.target.closest('button').dataset.numero);
+                eliminarDetalle(numero);
+            });
+        });
+
+        document.querySelectorAll('.sumar').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const numero = parseInt(e.target.closest('button').dataset.numero);
+                sumarDetalle(numero);
+            });
+        });
+
+        document.querySelectorAll('.restar').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const numero = parseInt(e.target.closest('button').dataset.numero);
+                restarDetalle(numero);
+            });
+        });
+
+        document.getElementById('total').innerText = totalFactura(); // Actualizar el total
+    } catch (error) {
+        console.error('Error al cargar detalles:', error);
+    }
 }
 
 //Implementar un utils para que sume la cantidad de cada detalle
