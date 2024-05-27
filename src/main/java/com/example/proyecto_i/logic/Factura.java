@@ -14,6 +14,7 @@ public class Factura {
     @Column(name = "fecha")
     private String fecha;
     @OneToMany(mappedBy = "facturaByNumerofactura")
+    @JsonIgnore
     private Collection<Detalle> detallesByNumero;
     @ManyToOne
     @JsonIgnore

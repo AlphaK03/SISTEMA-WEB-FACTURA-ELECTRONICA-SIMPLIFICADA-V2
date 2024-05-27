@@ -309,30 +309,46 @@ function validar() {
        return;
    }*/
 async function add_factura(event) {
+    event.preventDefault();
 
     console.log("Enviando la factura");
     console.log(facturaState.factura);
-    let request = new Request('/api/facturas/crearFactura', {
+
+    let facturaRequest = new Request('/api/facturas/crearFactura', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(facturaState.factura)
     });
 
     try {
-        const response = await fetch(request);
-        const data = await response.text();
-        console.log(data);
-        if (response.ok) {
-            document.getElementById('responseMessage').innerText = 'Se ha agregado correctamente la factura';
+        const facturaResponse = await fetch(facturaRequest);
+        const facturaData = await facturaResponse.json();
+        console.log(facturaData);
+        if (facturaResponse.ok) {
+            // Enviar los detalles de la factura
+            for (const detalle of facturaState.factura.lista_detalles) {
+                detalle.numerofactura = facturaData.numero; // Asignar el número de la factura recibida
+                let detalleRequest = new Request('/api/detalles/crearDetalle', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(detalle)
+                });
+                const detalleResponse = await fetch(detalleRequest);
+                const detalleData = await detalleResponse.json();
+                if (!detalleResponse.ok) {
+                    console.error('Error en el detalle:', detalleData);
+                }
+            }
+            document.getElementById('responseMessage').innerText = 'Se ha agregado correctamente la factura y los detalles';
         } else {
-            document.getElementById('responseMessage').innerText = 'Error en la factura: ' + data;
+            document.getElementById('responseMessage').innerText = 'Error en la factura: ' + facturaData.message;
         }
     } catch (error) {
         console.error('Error:', error);
         document.getElementById('responseMessage').innerText = 'Error al ingresar la factura';
     }
-
 }
+
 
 //----------------------------AGREGAR DETALLES
 

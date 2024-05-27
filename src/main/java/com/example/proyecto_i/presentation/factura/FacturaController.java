@@ -27,8 +27,9 @@ public class FacturaController {
     private Service service;
 
     @PostMapping("/crearFactura")
-    public ResponseEntity<Map<String, Object>> crearFactura(@RequestBody Factura factura, Authentication authentication) {
+    public ResponseEntity<Map<String, Object>> crearFactura(@RequestBody Factura factura, Authentication authentication, HttpSession session) {
         Map<String, Object> response = new HashMap<>();
+        List<Detalle> detalles = (List<Detalle>) session.getAttribute("facturaDetalles");
         if (authentication == null) {
             response.put("success", false);
             response.put("message", "No user authenticated");
@@ -40,13 +41,21 @@ public class FacturaController {
             if (proveedorOpt.isPresent()) {
                 Proveedor proveedor = proveedorOpt.get();
                 factura.setProveedorByProveedor(proveedor);
-                service.facturasCreate(factura);
+                factura.setFecha(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+
+                factura.setDetallesByNumero(new ArrayList<>()); // Resetear la lista de detalles para evitar problemas de persistencia
+
+               service.facturasCreate(factura);
+                for (Detalle detalle : detalles) {
+                    detalle.setFacturaByNumerofactura(factura);
+                    service.detalleCreate(detalle);
+                }
                 response.put("success", true);
                 response.put("message", "Factura agregada exitosamente");
                 return new ResponseEntity<>(response, HttpStatus.OK);
             } else {
                 response.put("success", false);
-                response.put("message", "Factura no encontrado");
+                response.put("message", "Proveedor no encontrado");
                 return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
@@ -55,7 +64,6 @@ public class FacturaController {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
 /*
     @GetMapping("/presentation/facturar/showFacturar")

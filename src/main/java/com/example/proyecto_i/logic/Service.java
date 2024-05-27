@@ -249,7 +249,7 @@ public class Service {
             Optional<Usuario> optionalUsuario = usuarioRepository.findById(id);
             if (optionalUsuario.isPresent()) {
                 Usuario usuario = optionalUsuario.get();
-                byte activoByte = (byte) (estado != null && estado.equalsIgnoreCase("activo") ? 1 : 0);
+                byte activoByte = (byte) (estado != null && estado.equalsIgnoreCase("true") ? 1 : 0);
                 usuario.setActivo(activoByte);
                 usuarioRepository.save(usuario);
             } else {
@@ -289,6 +289,18 @@ public class Service {
     @Autowired
     public void UsuarioService(UsuarioRepository usuarioRepository) {
         this.usuarioRepository = usuarioRepository;
+    }
+
+
+    public Usuario verificarCredenciales(String identificacion, String contrasena) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(identificacion);
+        if (usuarioOpt.isPresent()) {
+            Usuario usuario = usuarioOpt.get();
+            if (usuario.getContrasena().equals(contrasena) && usuario.isActivo()) {
+                return usuario;
+            }
+        }
+        return null;
     }
 
 }

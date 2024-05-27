@@ -82,4 +82,8 @@ public class Usuario {
         result = 31 * result + (int) activo;
         return result;
     }
+
+    public boolean isActivo() {
+        return activo == 1;
+    }
 }

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Administración de Proveedores</title>
     <link rel="stylesheet" href="/css/administracion.css">
     <link rel="stylesheet" href="/css/menu.css">
 </head>
@@ -10,28 +10,57 @@
 <div id="menu" class="menu-container"></div>
 
 <h2>Lista de Todos los Proveedores</h2>
-<form action="/actualizarProveedores" method="post">
-    <table>
-        <!-- Por cada proveedor, incluir un campo oculto para el ID y el estado -->
-        <tr each="proveedor : ${proveedores}">
-            <input type="hidden" name="proveedorId" value="${proveedor.identificacion}" />
-            <td text="${proveedor.identificacion}"></td>
-            <td text="${proveedor.nombre}"></td>
-            <td text="${proveedor.telefono}"></td>
-            <td text="${proveedor.correo}"></td>
-            <td>
-                <select name="estado">
-                    <option value="activo">Aceptar</option>
-                    <option value="inactivo">Desactivar</option>
-                </select>
-            </td>
-        </tr>
-    </table>
-    <button type="submit">Actualizar</button>
-</form>
-<script src="/js/app.js"></script>
+<table id="proveedoresTable">
+    <thead>
+    <tr>
+        <th>Identificación</th>
+        <th>Nombre</th>
+        <th>Teléfono</th>
+        <th>Correo</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Los datos se llenarán dinámicamente mediante JavaScript -->
+    </tbody>
+</table>
 
+<script src="/js/app.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        const response = await fetch('/api/administracion/proveedores');
+        const proveedores = await response.json();
+        const tableBody = document.querySelector('#proveedoresTable tbody');
+
+        proveedores.forEach(proveedor => {
+            const row = document.createElement('tr');
+
+            row.innerHTML = `
+            <td>${proveedor.identificacion}</td>
+            <td>${proveedor.nombre}</td>
+            <td>${proveedor.telefono}</td>
+            <td>${proveedor.correo}</td>
+            <td>${proveedor.activo ? 'Activo' : 'Inactivo'}</td>
+            <td>
+                <button onclick="actualizarEstado('${proveedor.identificacion}', ${!proveedor.activo})">
+                    ${proveedor.activo ? 'Desactivar' : 'Activar'}
+                </button>
+            </td>
+        `;
+
+            tableBody.appendChild(row);
+        });
+    });
+
+    async function actualizarEstado(proveedorId, estado) {
+        await fetch('/api/administracion/actualizarProveedor', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({ proveedorId, estado })
+        });
+        location.reload(); // Recargar la página para actualizar la lista de proveedores
+    }
+</script>
 </body>
 </html>
-
-
