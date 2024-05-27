@@ -2,6 +2,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     render_client_register();
     await load_client_list();
 });
+var clienteState={
+    cliente : {identificacion:"", nombre:"", telefono:"", correo:""}
+}
 
 function render_client_register() {
     const container = document.querySelector('#form-container');
@@ -76,24 +79,35 @@ async function load_client_list() {
         console.error('Error al cargar clientes:', error);
     }
 }
-
+function load_item(){
+    clienteState.cliente={
+        identificacion : document.getElementById("identificacion").value,
+        nombre : document.getElementById("nombre").value,
+        telefono : document.getElementById("telefono").value,
+        correo : document.getElementById("correo").value
+    };
+}
+function empty_item(){
+    clienteState.cliente={
+        identificacion : "",
+        nombre : "",
+        telefono : "",
+        correo : ""
+    };
+}
 async function client_register(event) {
     event.preventDefault();
-    let cliente = {
-        identificacion: document.getElementById("identificacion").value,
-        nombre: document.getElementById("nombre").value,
-        telefono: document.getElementById("telefono").value,
-        correo: document.getElementById("correo").value
-    };
+    load_item();
+    if(!validar()){return;}
     let request = new Request('/api/clientes/crearCliente', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(cliente)
+        body: JSON.stringify(clienteState.cliente)
     });
 
     try {
         const response = await fetch(request);
-        const data = await response.text(); // Ahora que devolvemos texto
+        const data = await response.text();
         if (response.ok) {
             document.getElementById('responseMessage').innerText = 'Registro exitoso';
             await load_client_list(); // Actualiza la lista después de registrar
@@ -104,4 +118,30 @@ async function client_register(event) {
         console.error('Error:', error);
         document.getElementById('responseMessage').innerText = 'Error en el registro';
     }
+}
+function validar() {
+    var error=false;
+
+    document.querySelectorAll('input').forEach( (i)=> {i.classList.remove("invalid");});
+
+    if (clienteState.cliente.identificacion.length===0){
+        document.querySelector("#identificacion").classList.add("invalid");
+        error=true;
+    }
+
+    if (clienteState.cliente.nombre.length===0){
+        document.querySelector("#nombre").classList.add("invalid");
+        error=true;
+    }
+
+    if ( clienteState.cliente.telefono===0){
+        document.querySelector("#telefono").classList.add("invalid");
+        error=true;
+    }
+    if ( clienteState.cliente.correo===0){
+        document.querySelector("#correo").classList.add("invalid");
+        error=true;
+    }
+
+    return !error;
 }

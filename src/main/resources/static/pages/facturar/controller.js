@@ -1,10 +1,23 @@
 document.addEventListener("DOMContentLoaded", loaded);
 
-var facturaState={
-    lista_detalles: [],
-    proveedor:{nombre:""},
-    cliente : {identificacion:"", nombre:"", telefono:"", correo:""}
+var facturaState = {
+
+    proveedor: {nombre: ""},
+    cliente: {identificacion: "", nombre: "", telefono: "", correo: ""},
+    factura: {fecha: formatoFecha(), idCliente: "", lista_detalles: []}
 }
+
+function formatoFecha() {
+    const fechaActual = new Date();
+    const dia = String(fechaActual.getDate()).padStart(2, '0');
+    const mes = String(fechaActual.getMonth() + 1).padStart(2, '0'); // Los meses en JavaScript van de 0 a 11
+    const año = fechaActual.getFullYear();
+
+    const soloFecha = `${dia}/${mes}/${año}`;
+    console.log(soloFecha);
+    return soloFecha
+}
+
 async function loaded(event) {
     try {
         await render_proveedor();
@@ -17,24 +30,31 @@ async function loaded(event) {
 }
 
 //MANEJO DE LA LISTA DE DETALLES
-class Detalle{
-    constructor (numero, descripcion, cantidad, codigoProducto, precio, monto){
+class Detalle {
+    constructor(numero, descripcion, cantidad, codigoProducto, precio, monto) {
         this.numero = numero;
-        this.descripcion=descripcion;
-        this.cantidad=cantidad;
-        this.codigoProducto=codigoProducto;
+        this.descripcion = descripcion;
+        this.cantidad = cantidad;
+        this.codigoProducto = codigoProducto;
         this.precioProducto = precio;
         this.monto = monto;
     }
 }
+
+//CRUD DE LA LISTA DE DETALLES
 function agregarDetalle(numero, descripcion, cantidad, codigoProducto, precio) {
+    const productoExistente = facturaState.factura.lista_detalles.some(detalle => detalle.codigoProducto === codigoProducto);
+    if (productoExistente) {
+        return;
+    }
     const detalle = new Detalle(numero, descripcion, cantidad, codigoProducto, precio, precio * cantidad);
-    facturaState.lista_detalles.push(detalle);
+    facturaState.factura.lista_detalles.push(detalle);
     console.log("Detalle agregado correctamente");
-    load_detalles(); // Recargar la lista después de agregar un detalle
+    load_detalles();
 }
+
 function sumarDetalle(numero) {
-    facturaState.lista_detalles.forEach(detalle => {
+    facturaState.factura.lista_detalles.forEach(detalle => {
         if (detalle.numero === numero) {
             detalle.cantidad += 1;
             detalle.monto = detalle.precioProducto * detalle.cantidad;
@@ -44,7 +64,7 @@ function sumarDetalle(numero) {
 }
 
 function restarDetalle(numero) {
-    facturaState.lista_detalles.forEach(detalle => {
+    facturaState.factura.lista_detalles.forEach(detalle => {
         if (detalle.numero === numero && detalle.cantidad > 1) {
             detalle.cantidad -= 1;
             detalle.monto = detalle.precioProducto * detalle.cantidad;
@@ -52,23 +72,23 @@ function restarDetalle(numero) {
     });
     load_detalles(); // Recargar la lista después de modificar un detalle
 }
+
 function eliminarDetalle(numero) {
-    const indice = facturaState.lista_detalles.findIndex(det => det.numero === numero);
+    const indice = facturaState.factura.lista_detalles.findIndex(det => det.numero === numero);
     if (indice !== -1) {
-        facturaState.lista_detalles.splice(indice, 1);
+        facturaState.factura.lista_detalles.splice(indice, 1);
         console.log(`Detalle con número ${numero} eliminado.`);
     } else {
         console.error(`Detalle con número ${numero} no encontrado.`);
     }
     load_detalles(); // Recargar la lista después de eliminar un detalle
 }
-//Total de factura
+
 function totalFactura() {
-    return facturaState.lista_detalles.reduce((total, detalle) => total + detalle.monto, 0);
+    return facturaState.factura.lista_detalles.reduce((total, detalle) => total + detalle.monto, 0);
 }
 
-//Renderización de html
-//BUSQUEDA
+//------------------------BUSQUEDA PROVEEDOR
 async function render_proveedor() {
     const data = await load_proveedor();
     if (data) {
@@ -83,7 +103,22 @@ async function render_proveedor() {
         container_search.insertAdjacentHTML('beforeend', proveedorNombre);
     }
 }
-function render_cliente(){
+
+async function load_proveedor(event) {
+    try {
+        const response = await fetch('/api/facturas/proveedorID');
+        if (!response.ok) {
+            throw new Error('Error al obtener el proveedor');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error al cargar proveedor:', error);
+    }
+}
+
+//------------------------BUSQUEDA CLIENTE
+function render_cliente() {
     const container_search = document.querySelector('#search-container');
     let clienteSearchHTML = `
         <div id="cliente-search" class="section search">
@@ -101,14 +136,14 @@ function render_cliente(){
     container_search.insertAdjacentHTML('beforeend', clienteSearchHTML);
     document.querySelector('#clienteForm').addEventListener('submit', cliente_search);
 }
-function render_producto(){
+
+function render_producto() {
     const container_search = document.querySelector('#search-container');
     let productoSearchHTML = `
         <div id = "producto-search" class="section search">
             <h4>Buscar Producto:</h4>
-            <td text="HOLA"></td>
 
-            <label text="LABEL"></label><br>
+            <label id="mensaje">LABEL</label><br>
             <form id = "productoForm">
                 <input type="text" id = "nombreProducto" name = "nombre" placeholder="Ingrese el nombre del producto">
                 <button type="submit">Buscar</button>
@@ -116,58 +151,19 @@ function render_producto(){
         </div>
     `;
     container_search.insertAdjacentHTML('beforeend', productoSearchHTML);
-    document.querySelector('#productoForm').addEventListener('submit',producto_search);
+    document.querySelector('#productoForm').addEventListener('submit', producto_search);
 }
 
-//LISTA DE DETALLES (FACTURA)
-function render_list() {
-    const lista = document.querySelector('#lista-productos');
-    let listaHTML = `
-        <h2>Lista de Detalles</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Eliminar</th>
-                    <th>Cantidad</th>
-                    <th>Descripción</th>
-                    <th>Precio</th>
-                    <th>Monto</th>
-                    <th>Botones</th>
-                </tr>
-            </thead>
-            <tbody id="detallesTable">
-            </tbody>
-        </table>
-        <h4>Total: <span id="total"></span></h4>
-    `;
-    lista.innerHTML = listaHTML; // Usar innerHTML en lugar de insertAdjacentHTML
-    load_detalles(); // Cargar detalles iniciales
-}
-
-//CARGAR DATOS DESDE EL BACKEND
-async function load_proveedor(event){
-    try {
-        const response = await fetch('/api/facturas/proveedorID');
-        if(!response.ok){
-            throw new Error('Error al obtener el proveedor');
-        }
-        const data = await response.json();
-        return data;
-    } catch(error) {
-        console.error('Error al cargar proveedor:', error);
-    }
-}
-
-async function cliente_search(event){
+async function cliente_search(event) {
     event.preventDefault();
     console.log("ESTOY en clienteSearch");
 
     const id_cliente = document.getElementById("identificacion-cliente").value;
     const request = new Request(`/api/facturas/searchCliente?identificacionCliente=${id_cliente}`, {
         method: 'GET',
-        headers: { }
+        headers: {}
     });
-    try{
+    try {
         const response = await fetch(request);
         const data = await response.json();
 
@@ -177,16 +173,18 @@ async function cliente_search(event){
             return;
         }
         console.log(data);
-        facturaState.cliente=data;
+        facturaState.cliente = data;
+        facturaState.factura.idCliente = data.identificacion;
         //Mostrar la información del cliente en el HTML
-        document.getElementById('nombre-cliente').innerText=facturaState.cliente.nombre;
-        document.getElementById("identificacion-cliente").ariaPlaceholder = "Ingrese el nombre del cliente";
-    }catch(error){
+        document.getElementById('nombre-cliente').innerText = facturaState.cliente.nombre;
+    } catch (error) {
         console.error('Error al buscar cliente:', error);
         document.getElementById('cliente-info').innerText = 'Error al buscar cliente';
     }
 }
-async function producto_search(event){
+
+//----------------------------BUSQUEDA PRODUCTO
+async function producto_search(event) {
     event.preventDefault();
     console.log("ESTOY en ADDProducto");
 
@@ -194,29 +192,54 @@ async function producto_search(event){
     console.log(nombreProducto);
     const request = new Request(`/api/facturas/searchProducto?nombreProducto=${nombreProducto}`, {
         method: 'GET',
-        headers: { }
+        headers: {}
     });
-    try{
+    try {
         const response = await fetch(request);
         const data = await response.json();
         console.log(data);
         if (data.error) {
             console.error('Error al buscar el producto', data.error);
-            document.getElementById('LABEL').innerText = `Error al buscar producto: ${data.error}`;
             return;
         }
-        console.log(data);
-        agregarDetalle(facturaState.lista_detalles.length + 1, data.nombre, 1, data.codigo, data.precio);
-    }catch(error){
+        agregarDetalle(facturaState.factura.lista_detalles.length + 1, data.nombre, 1, data.codigo, data.precio);
+    } catch (error) {
         console.error('Error al buscar producto:', error);
-        document.getElementById('LABEL').innerText = 'Error al buscar producto';
     }
 }
+
+//----------------------------LISTA DE DETALLES (FACTURA)
+function render_list() {
+    const lista = document.querySelector('#lista-productos');
+    let listaHTML = `
+        <h2>Lista de Detalles</h2>
+        <table>
+        <thead>
+            <tr>
+                <th>Eliminar</th>
+                <th>Cantidad</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Monto</th>
+                <th>Botones</th>
+            </tr>
+            </thead>
+            <tbody id="detallesTable">
+            </tbody>
+        </table>
+        <h4>Total: <span id="total"></span></h4>
+        <button id = "crear-factura">Crear Factura</button>
+    `;
+    lista.innerHTML = listaHTML;
+    document.querySelector('#crear-factura').addEventListener('click', add_factura);
+    load_detalles(); // Cargar detalles
+}
+
 function load_detalles() {
     try {
         const detallesTable = document.getElementById('detallesTable');
         detallesTable.innerHTML = ''; // Limpiar la lista anterior
-        facturaState.lista_detalles.forEach(detalle => {
+        facturaState.factura.lista_detalles.forEach(detalle => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td><button class="eliminar" data-numero="${detalle.numero}"><img src="/images/equis.png" width="20px"/></button></td>
@@ -260,5 +283,56 @@ function load_detalles() {
     }
 }
 
-//Implementar un utils para que sume la cantidad de cada detalle
-//Si da tiempo implementar el de los botones
+//----------------------------AGREGAR FACTURA
+function validar() {
+    var error = false;
+    document.querySelectorAll('input').forEach((i) => {
+        i.classList.remove("invalid");
+    });
+
+    if (facturaState.cliente.identificacion.length === 0) {
+        document.querySelector("#identificacion-cliente").classList.add("invalid");
+        console.log("Error: No hay cliente asociado");
+        error = true;
+    }
+
+    if (facturaState.factura.lista_detalles.length === 0) {
+        //Agregar un campo en donde se le diga que no hay productos agregados
+        console.log("Error: Lista de productos vacía");
+        error = true;
+    }
+    console.log("Validando: ", error);
+    return !error;
+}
+/*if (!validar()) {
+       console.log("Hubo un error")
+       return;
+   }*/
+async function add_factura(event) {
+
+    console.log("Enviando la factura");
+    console.log(facturaState.factura);
+    let request = new Request('/api/facturas/crearFactura', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(facturaState.factura)
+    });
+
+    try {
+        const response = await fetch(request);
+        const data = await response.text();
+        console.log(data);
+        if (response.ok) {
+            document.getElementById('responseMessage').innerText = 'Se ha agregado correctamente la factura';
+        } else {
+            document.getElementById('responseMessage').innerText = 'Error en la factura: ' + data;
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('responseMessage').innerText = 'Error al ingresar la factura';
+    }
+
+}
+
+//----------------------------AGREGAR DETALLES
+

@@ -26,7 +26,7 @@ public class FacturaController {
     @Autowired
     private Service service;
 
-    @GetMapping("/crearFactura")
+    @PostMapping("/crearFactura")
     public ResponseEntity<Map<String, Object>> crearFactura(@RequestBody Factura factura, Authentication authentication) {
         Map<String, Object> response = new HashMap<>();
         if (authentication == null) {
