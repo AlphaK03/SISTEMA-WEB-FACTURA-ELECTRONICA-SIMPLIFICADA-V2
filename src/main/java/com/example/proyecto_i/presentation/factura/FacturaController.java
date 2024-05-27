@@ -29,39 +29,38 @@ public class FacturaController {
     @PostMapping("/crearFactura")
     public ResponseEntity<Map<String, Object>> crearFactura(@RequestBody Factura factura, Authentication authentication, HttpSession session) {
         Map<String, Object> response = new HashMap<>();
-        List<Detalle> detalles = (List<Detalle>) session.getAttribute("facturaDetalles");
-        if (authentication == null) {
-            response.put("success", false);
-            response.put("message", "No user authenticated");
-            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
-        }
         try {
-            String username = authentication.getName();
-            Optional<Proveedor> proveedorOpt = service.proveedorRead(username);
-            if (proveedorOpt.isPresent()) {
-                Proveedor proveedor = proveedorOpt.get();
-                factura.setProveedorByProveedor(proveedor);
-                factura.setFecha(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            System.out.println("Factura recibida: " + factura);
+            System.out.println("Detalles recibidos: " + factura.getDetallesByNumero());
 
-                factura.setDetallesByNumero(new ArrayList<>()); // Resetear la lista de detalles para evitar problemas de persistencia
+            factura.setClienteByCliente(service.clientesSearch(factura.getClienteByCliente().getIdentificacion()));
+            factura.setProveedorByProveedor(factura.getClienteByCliente().getProveedorByProveedor());
+            List<Detalle> lista = (List<Detalle>) factura.getDetallesByNumero();
+            factura.setDetallesByNumero(null);
+            // Guarda la factura en la base de datos
+            service.facturasCreate(factura);
+            // Aquí podrías imprimir los detalles individuales para verificar que están siendo deserializados correctamente
+            lista.forEach(detalle -> {
+                detalle.setFacturaByNumerofactura(service.facturasGetAll().getFirst());
+                detalle.getProductoByCodigoproducto().setProveedorByProveedor(factura.getProveedorByProveedor());
 
-               service.facturasCreate(factura);
-                for (Detalle detalle : detalles) {
-                    detalle.setFacturaByNumerofactura(factura);
+                try {
                     service.detalleCreate(detalle);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
-                response.put("success", true);
-                response.put("message", "Factura agregada exitosamente");
-                return new ResponseEntity<>(response, HttpStatus.OK);
-            } else {
-                response.put("success", false);
-                response.put("message", "Proveedor no encontrado");
-                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-            }
+            });
+
+
+
+
+
+            response.put("message", "Factura creada exitosamente");
+            response.put("numero", factura.getNumero());
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "Error al agregar factura");
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            response.put("message", "Error al crear la factura: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 

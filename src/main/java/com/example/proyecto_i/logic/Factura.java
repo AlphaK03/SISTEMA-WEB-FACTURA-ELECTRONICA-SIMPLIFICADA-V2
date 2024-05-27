@@ -3,6 +3,7 @@ package com.example.proyecto_i.logic;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
@@ -13,9 +14,9 @@ public class Factura {
     @Basic
     @Column(name = "fecha")
     private String fecha;
-    @OneToMany(mappedBy = "facturaByNumerofactura")
-    @JsonIgnore
-    private Collection<Detalle> detallesByNumero;
+    @OneToMany(mappedBy = "facturaByNumerofactura", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Collection<Detalle> detallesByNumero = new ArrayList<>();
+
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "proveedor", referencedColumnName = "identificacion", nullable = false)

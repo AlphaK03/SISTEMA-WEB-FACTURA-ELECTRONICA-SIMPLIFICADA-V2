@@ -303,6 +303,27 @@ public class Service {
         return null;
     }
 
+
+    public void crearFactura(FacturaSimpleDTO facturaDTO) throws Exception {
+        Factura factura = new Factura();
+        factura.setNumero(facturaDTO.getNumero());
+        factura.setFecha(facturaDTO.getFecha());
+       // factura.setProveedor(facturaDTO.getProveedorIdentificacion());
+       // factura.setCliente(facturaDTO.getClienteIdentificacion());
+
+       facturasCreate(factura);
+
+        for (DetalleSimpleDTO detalleDTO : facturaDTO.getDetalles()) {
+            Detalle detalle = new Detalle();
+            detalle.setNumero(detalleDTO.getNumero());
+            detalle.setDescripcion(detalleDTO.getDescripcion());
+            detalle.setCantidad(detalleDTO.getCantidad());
+            //detalle.setCodigoproducto(Integer.parseInt(detalleDTO.getCodigoProducto()));
+            //detalle.setNumerofactura(factura.getNumero());
+
+            detalleCreate(detalle);
+        }
+    }
 }
 
 

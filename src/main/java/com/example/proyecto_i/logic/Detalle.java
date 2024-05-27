@@ -16,7 +16,6 @@ public class Detalle {
     private int cantidad;
     @ManyToOne
     @JoinColumn(name = "numerofactura", referencedColumnName = "numero", nullable = false)
-    @JsonIgnore
     private Factura facturaByNumerofactura;
     @ManyToOne
     @JoinColumn(name = "codigoproducto", referencedColumnName = "codigo", nullable = false)

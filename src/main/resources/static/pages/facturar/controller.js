@@ -1,11 +1,16 @@
 document.addEventListener("DOMContentLoaded", loaded);
 
 var facturaState = {
+    proveedor: { nombre: "", identificacion: "" },
+    cliente: { identificacion: "", nombre: "", telefono: "", correo: "" },
+    factura: {
+        fecha: formatoFecha(),
+        proveedorByProveedor: { identificacion: "" },
+        clienteByCliente: { identificacion: "" },
+        detallesByNumero: []
+    }
+};
 
-    proveedor: {nombre: ""},
-    cliente: {identificacion: "", nombre: "", telefono: "", correo: ""},
-    factura: {fecha: formatoFecha(), idCliente: "", lista_detalles: []}
-}
 
 function formatoFecha() {
     const fechaActual = new Date();
@@ -31,30 +36,33 @@ async function loaded(event) {
 
 //MANEJO DE LA LISTA DE DETALLES
 class Detalle {
-    constructor(numero, descripcion, cantidad, codigoProducto, precio, monto) {
+    constructor(numero, descripcion, cantidad, producto, precio, monto) {
         this.numero = numero;
         this.descripcion = descripcion;
         this.cantidad = cantidad;
-        this.codigoProducto = codigoProducto;
+        this.productoByCodigoproducto = producto; // Aquí se asigna el objeto completo de Producto
         this.precioProducto = precio;
         this.monto = monto;
     }
 }
 
 //CRUD DE LA LISTA DE DETALLES
-function agregarDetalle(numero, descripcion, cantidad, codigoProducto, precio) {
-    const productoExistente = facturaState.factura.lista_detalles.some(detalle => detalle.codigoProducto === codigoProducto);
-    if (productoExistente) {
-        return;
-    }
-    const detalle = new Detalle(numero, descripcion, cantidad, codigoProducto, precio, precio * cantidad);
-    facturaState.factura.lista_detalles.push(detalle);
+function agregarDetalle(numero, descripcion, cantidad, producto, precio) {
+    const detalle = new Detalle(numero, descripcion, cantidad, producto, precio, cantidad * precio);
+
+    // Agregar el detalle a la lista de detalles de la factura
+    facturaState.factura.detallesByNumero.push(detalle);
+
     console.log("Detalle agregado correctamente");
     load_detalles();
 }
 
+
+
+
+
 function sumarDetalle(numero) {
-    facturaState.factura.lista_detalles.forEach(detalle => {
+    facturaState.factura.detallesByNumero.forEach(detalle => {
         if (detalle.numero === numero) {
             detalle.cantidad += 1;
             detalle.monto = detalle.precioProducto * detalle.cantidad;
@@ -64,7 +72,7 @@ function sumarDetalle(numero) {
 }
 
 function restarDetalle(numero) {
-    facturaState.factura.lista_detalles.forEach(detalle => {
+    facturaState.factura.detallesByNumero.forEach(detalle => {
         if (detalle.numero === numero && detalle.cantidad > 1) {
             detalle.cantidad -= 1;
             detalle.monto = detalle.precioProducto * detalle.cantidad;
@@ -74,9 +82,9 @@ function restarDetalle(numero) {
 }
 
 function eliminarDetalle(numero) {
-    const indice = facturaState.factura.lista_detalles.findIndex(det => det.numero === numero);
+    const indice = facturaState.factura.detallesByNumero.findIndex(det => det.numero === numero);
     if (indice !== -1) {
-        facturaState.factura.lista_detalles.splice(indice, 1);
+        facturaState.factura.detallesByNumero.splice(indice, 1);
         console.log(`Detalle con número ${numero} eliminado.`);
     } else {
         console.error(`Detalle con número ${numero} no encontrado.`);
@@ -85,7 +93,7 @@ function eliminarDetalle(numero) {
 }
 
 function totalFactura() {
-    return facturaState.factura.lista_detalles.reduce((total, detalle) => total + detalle.monto, 0);
+    return facturaState.factura.detallesByNumero.reduce((total, detalle) => total + detalle.monto, 0);
 }
 
 //------------------------BUSQUEDA PROVEEDOR
@@ -196,17 +204,23 @@ async function producto_search(event) {
     });
     try {
         const response = await fetch(request);
-        const data = await response.json();
-        console.log(data);
-        if (data.error) {
-            console.error('Error al buscar el producto', data.error);
+        const producto = await response.json();
+        console.log(producto);
+        if (producto.error) {
+            console.error('Error al buscar el producto', producto.error);
             return;
         }
-        agregarDetalle(facturaState.factura.lista_detalles.length + 1, data.nombre, 1, data.codigo, data.precio);
+
+        // Agregar el detalle con el objeto completo de Producto
+        agregarDetalle(facturaState.factura.detallesByNumero.length + 1, producto.nombre, 1, producto, producto.precio);
     } catch (error) {
         console.error('Error al buscar producto:', error);
     }
 }
+
+
+
+
 
 //----------------------------LISTA DE DETALLES (FACTURA)
 function render_list() {
@@ -239,7 +253,7 @@ function load_detalles() {
     try {
         const detallesTable = document.getElementById('detallesTable');
         detallesTable.innerHTML = ''; // Limpiar la lista anterior
-        facturaState.factura.lista_detalles.forEach(detalle => {
+        facturaState.factura.detallesByNumero.forEach(detalle => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td><button class="eliminar" data-numero="${detalle.numero}"><img src="/images/equis.png" width="20px"/></button></td>
@@ -296,7 +310,7 @@ function validar() {
         error = true;
     }
 
-    if (facturaState.factura.lista_detalles.length === 0) {
+    if (facturaState.factura.detallesByNumero.length === 0) {
         //Agregar un campo en donde se le diga que no hay productos agregados
         console.log("Error: Lista de productos vacía");
         error = true;
@@ -311,8 +325,12 @@ function validar() {
 async function add_factura(event) {
     event.preventDefault();
 
-    console.log("Enviando la factura");
-    console.log(facturaState.factura);
+    // Suponiendo que tienes los datos del proveedor y del cliente correctamente asignados
+    facturaState.factura.proveedorByProveedor = { identificacion: facturaState.proveedor.identificacion };
+    facturaState.factura.clienteByCliente = { identificacion: facturaState.cliente.identificacion };
+
+    console.log("Enviando la factura:");
+    console.log(JSON.stringify(facturaState.factura, null, 2)); // Pretty-print JSON
 
     let facturaRequest = new Request('/api/facturas/crearFactura', {
         method: 'POST',
@@ -325,9 +343,16 @@ async function add_factura(event) {
         const facturaData = await facturaResponse.json();
         console.log(facturaData);
         if (facturaResponse.ok) {
+            // Obtener el número de factura generado
+            const numeroFactura = facturaData.numero;
+
+            // Agregar el número de factura a cada detalle
+            facturaState.factura.detallesByNumero.forEach(detalle => {
+                detalle.numerofactura = numeroFactura;
+            });
+
             // Enviar los detalles de la factura
-            for (const detalle of facturaState.factura.lista_detalles) {
-                detalle.numerofactura = facturaData.numero; // Asignar el número de la factura recibida
+            for (const detalle of facturaState.factura.detallesByNumero) {
                 let detalleRequest = new Request('/api/detalles/crearDetalle', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -352,3 +377,11 @@ async function add_factura(event) {
 
 //----------------------------AGREGAR DETALLES
 
+function addDetalle(numero, descripcion, cantidad, codigoProducto, precio) {
+    const detalle = new Detalle(numero, descripcion, cantidad, codigoProducto, precio, precio * cantidad);
+    let detalles = JSON.parse(localStorage.getItem('facturaDetalles')) || [];
+    detalles.push(detalle);
+    localStorage.setItem('facturaDetalles', JSON.stringify(detalles));
+    facturaState.factura.detallesByNumero = detalles; // Actualizar facturaState
+    load_detalles();
+}
