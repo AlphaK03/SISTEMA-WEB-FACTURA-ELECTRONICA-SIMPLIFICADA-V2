@@ -285,6 +285,33 @@ public class FacturaController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error interno del servidor");
         }
     }
+    @GetMapping("/pdf")
+    public void pdf(@RequestParam String numero, HttpServletResponse response) throws Exception {
+        Factura factura = service.facturasSearchById(Integer.parseInt(numero));
+
+        // Establecer el tipo de contenido de la respuesta
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "inline; filename=factura.pdf");
+
+        // Crear el PDF y escribirlo en el output stream de la respuesta
+        PdfWriter writer = new PdfWriter(response.getOutputStream());
+        PdfDocument pdf = new PdfDocument(writer);
+        Document document = new Document(pdf, PageSize.A4);
+
+        // Crear contenido del PDF
+        Paragraph title = new Paragraph("Factura").setBold().setFontSize(20);
+        Paragraph content = new Paragraph("Número de factura: " + factura.getNumero() + "\n" +
+                "Fecha: " + factura.getFecha() + "\n" +
+                "Cliente: " + factura.getClienteByCliente().getNombre());
+
+        // Agregar contenido al documento
+        document.add(title);
+        document.add(content);
+
+        // Cerrar el documento
+        document.close();
+    }
+
     @GetMapping("/searchProducto")
     public Optional<Producto> agregarProducto(@RequestParam String nombreProducto, Authentication authentication){
         if (authentication == null) {

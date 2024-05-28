@@ -45,6 +45,8 @@ public class ProyectoIApplication {
 						.requestMatchers("/api/facturas/listar").permitAll()
 						.requestMatchers("/api/facturas/listar-facturas").permitAll()
 						.requestMatchers("/api/facturas/proveedorID").permitAll()
+						.requestMatchers("/api/facturas/pdf").permitAll()
+
 						//?
 						.requestMatchers("/api/productos/proveedor").hasAnyAuthority("ADM", "PRO")
 						.requestMatchers("/api/**").authenticated()

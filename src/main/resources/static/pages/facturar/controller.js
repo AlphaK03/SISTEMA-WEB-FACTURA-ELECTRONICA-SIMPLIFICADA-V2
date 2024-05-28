@@ -11,7 +11,6 @@ var facturaState = {
     }
 };
 
-
 function formatoFecha() {
     const fechaActual = new Date();
     const dia = String(fechaActual.getDate()).padStart(2, '0');
@@ -56,10 +55,6 @@ function agregarDetalle(numero, descripcion, cantidad, producto, precio) {
     console.log("Detalle agregado correctamente");
     load_detalles();
 }
-
-
-
-
 
 function sumarDetalle(numero) {
     facturaState.factura.detallesByNumero.forEach(detalle => {
@@ -151,7 +146,6 @@ function render_producto() {
         <div id = "producto-search" class="section search">
             <h4>Buscar Producto:</h4>
 
-            <label id="mensaje">LABEL</label><br>
             <form id = "productoForm">
                 <input type="text" id = "nombreProducto" name = "nombre" placeholder="Ingrese el nombre del producto">
                 <button type="submit">Buscar</button>
@@ -318,10 +312,6 @@ function validar() {
     console.log("Validando: ", error);
     return !error;
 }
-/*if (!validar()) {
-       console.log("Hubo un error")
-       return;
-   }*/
 async function add_factura(event) {
     event.preventDefault();
 
