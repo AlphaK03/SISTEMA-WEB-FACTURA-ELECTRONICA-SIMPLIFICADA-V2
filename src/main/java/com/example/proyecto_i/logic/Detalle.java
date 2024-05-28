@@ -1,5 +1,6 @@
 package com.example.proyecto_i.logic;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
@@ -8,19 +9,23 @@ public class Detalle {
     @Id
     @Column(name = "numero")
     private int numero;
+
     @Basic
     @Column(name = "descripcion")
     private String descripcion;
+
     @Basic
     @Column(name = "cantidad")
     private int cantidad;
+
     @ManyToOne
     @JoinColumn(name = "numerofactura", referencedColumnName = "numero", nullable = false)
+    @JsonBackReference
     private Factura facturaByNumerofactura;
+
     @ManyToOne
     @JoinColumn(name = "codigoproducto", referencedColumnName = "codigo", nullable = false)
     private Producto productoByCodigoproducto;
-
     public int getNumero() {
         return numero;
     }

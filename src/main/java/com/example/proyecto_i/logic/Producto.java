@@ -12,17 +12,22 @@ public class Producto {
     @Id
     @Column(name = "codigo")
     private int codigo;
+
     @Basic
     @Column(name = "nombre")
     private String nombre;
+
     @Basic
     @Column(name = "precio")
     private String precio;
+
     @OneToMany(mappedBy = "productoByCodigoproducto")
-    private Collection<Detalle> detallesByCodigo;
-    @ManyToOne
     @JsonIgnore
+    private Collection<Detalle> detallesByCodigo;
+
+    @ManyToOne
     @JoinColumn(name = "proveedor", referencedColumnName = "identificacion", nullable = false)
+    @JsonIgnore
     private Proveedor proveedorByProveedor;
 
     public int getCodigo() {

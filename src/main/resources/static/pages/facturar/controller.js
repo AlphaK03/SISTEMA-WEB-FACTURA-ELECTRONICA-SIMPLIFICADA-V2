@@ -315,49 +315,44 @@ function validar() {
 async function add_factura(event) {
     event.preventDefault();
 
-    // Suponiendo que tienes los datos del proveedor y del cliente correctamente asignados
     facturaState.factura.proveedorByProveedor = { identificacion: facturaState.proveedor.identificacion };
     facturaState.factura.clienteByCliente = { identificacion: facturaState.cliente.identificacion };
 
-    console.log("Enviando la factura:");
-    console.log(JSON.stringify(facturaState.factura, null, 2)); // Pretty-print JSON
-
-    let facturaRequest = new Request('/api/facturas/crearFactura', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(facturaState.factura)
-    });
-
     try {
-        const facturaResponse = await fetch(facturaRequest);
-        const facturaData = await facturaResponse.json();
-        console.log(facturaData);
-        if (facturaResponse.ok) {
-            // Obtener el número de factura generado
-            const numeroFactura = facturaData.numero;
+        // Crear factura
+        let facturaRequest = new Request('/api/facturas/crearFactura', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(facturaState.factura)
+        });
 
-            // Agregar el número de factura a cada detalle
-            facturaState.factura.detallesByNumero.forEach(detalle => {
-                detalle.numerofactura = numeroFactura;
+        const facturaResponse = await fetch(facturaRequest);
+        if (!facturaResponse.ok) {
+            throw new Error('Error al crear la factura');
+        }
+
+        const facturaData = await facturaResponse.json();
+
+        // Actualizar los detalles con el número de factura recibido
+        const detalles = facturaState.factura.detallesByNumero.map(detalle => ({
+            ...detalle,
+            facturaByNumerofactura: { numero: facturaData.numero }
+        }));
+
+        for (const detalle of detalles) {
+            let detalleRequest = new Request('/api/detalles/crearDetalle', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(detalle)
             });
 
-            // Enviar los detalles de la factura
-            for (const detalle of facturaState.factura.detallesByNumero) {
-                let detalleRequest = new Request('/api/detalles/crearDetalle', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(detalle)
-                });
-                const detalleResponse = await fetch(detalleRequest);
-                const detalleData = await detalleResponse.json();
-                if (!detalleResponse.ok) {
-                    console.error('Error en el detalle:', detalleData);
-                }
+            const detalleResponse = await fetch(detalleRequest);
+            if (!detalleResponse.ok) {
+                throw new Error('Error al crear el detalle');
             }
-            document.getElementById('responseMessage').innerText = 'Se ha agregado correctamente la factura y los detalles';
-        } else {
-            document.getElementById('responseMessage').innerText = 'Error en la factura: ' + facturaData.message;
         }
+
+        document.getElementById('responseMessage').innerText = 'Se ha agregado correctamente la factura y los detalles';
     } catch (error) {
         console.error('Error:', error);
         document.getElementById('responseMessage').innerText = 'Error al ingresar la factura';

@@ -1,6 +1,7 @@
 package com.example.proyecto_i.logic;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -9,18 +10,22 @@ import java.util.Collection;
 @Entity
 public class Factura {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "numero")
     private int numero;
+
     @Basic
     @Column(name = "fecha")
     private String fecha;
+
     @OneToMany(mappedBy = "facturaByNumerofactura", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private Collection<Detalle> detallesByNumero = new ArrayList<>();
 
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "proveedor", referencedColumnName = "identificacion", nullable = false)
     private Proveedor proveedorByProveedor;
+
     @ManyToOne
     @JoinColumn(name = "cliente", referencedColumnName = "identificacion", nullable = false)
     private Cliente clienteByCliente;
